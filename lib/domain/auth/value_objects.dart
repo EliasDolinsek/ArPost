@@ -1,6 +1,6 @@
-import 'package:ArPost/domain/core/failures.dart';
-import 'package:ArPost/domain/core/value_objects.dart';
-import 'package:ArPost/domain/core/value_validators.dart';
+import 'package:ar_post/domain/core/failures.dart';
+import 'package:ar_post/domain/core/value_objects.dart';
+import 'package:ar_post/domain/core/value_validators.dart';
 import 'package:dartz/dartz.dart';
 
 class EmailAddress extends ValueObject<String>{
