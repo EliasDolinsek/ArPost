@@ -6,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 
+@LazySingleton(as: IAuthFacade)
 class FirebaseAuthFacade implements IAuthFacade {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
@@ -15,7 +17,7 @@ class FirebaseAuthFacade implements IAuthFacade {
 
   @override
   Future<Either<AuthFailure, Unit>> registertWithEmailAndPassword(
-      {@required EmailAddress address, @required password}) async {
+      {@required EmailAddress address, @required Password password}) async {
     final emailStr = address.getOrCrash();
     final passwordStr = address.getOrCrash();
 
@@ -61,22 +63,23 @@ class FirebaseAuthFacade implements IAuthFacade {
 
   @override
   Future<Either<AuthFailure, Unit>> signInWithGoogle() async {
-    final user = await _googleSignIn.signIn();
-    if (user == null) {
-      return left(const AuthFailure.cancelledByUser());
+    try {
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return left(const AuthFailure.cancelledByUser());
+      }
+
+      final googleAuthentication = await googleUser.authentication;
+
+      final authCredential = GoogleAuthProvider.credential(
+        idToken: googleAuthentication.idToken,
+        accessToken: googleAuthentication.accessToken,
+      );
+
+      await _firebaseAuth.signInWithCredential(authCredential);
+      return right(unit);
+    } on FirebaseAuthException catch (_) {
+      return left(const AuthFailure.serverError());
     }
-
-    final authentication = await user.authentication;
-    final credential = GoogleAuthProvider.credential(
-      idToken: authentication.idToken,
-      accessToken: authentication.accessToken,
-    );
-
-    return _firebaseAuth
-        .signInWithCredential(credential)
-        .then((_) => right(unit))
-        .catchError(
-          (_) => left(const AuthFailure.serverError()),
-        );
   }
 }

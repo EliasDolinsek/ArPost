@@ -23,7 +23,7 @@ abstract class ValueObject<T> {
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is ValueObject && o.value == this.value;
+    return o is ValueObject && o.value == value;
   }
 
   @override
