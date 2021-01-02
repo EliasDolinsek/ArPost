@@ -19,5 +19,65 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
   @override
   Stream<SignInFormState> mapEventToState(
     SignInFormEvent event,
-  ) async* {}
+  ) async* {
+    yield* event.map(emailChanged: (e) async* {
+      yield state.copyWith(
+        emailAddress: EmailAddress(e.email),
+        authFailureOrSuccessOption: none(),
+      );
+    }, passwordChanged: (e) async* {
+      yield state.copyWith(
+        password: Password(e.password),
+        authFailureOrSuccessOption: none(),
+      );
+    }, registerWithEmailAndPassword: (e) async* {
+      yield* _performActionOnAuthFacadeWithEmailAndPassword(
+          _authFacade.registertWithEmailAndPassword);
+    }, signInWithEmailAndPassword: (e) async* {
+      yield* _performActionOnAuthFacadeWithEmailAndPassword(
+          _authFacade.signInWithEmailAndPassword);
+    }, signInWithGoogle: (e) async* {
+      yield state.copyWith(
+        isSubmitting: true,
+        authFailureOrSuccessOption: none(),
+      );
+
+      final result = await _authFacade.signInWithGoogle();
+
+      yield state.copyWith(
+        isSubmitting: false,
+        authFailureOrSuccessOption: some(result),
+      );
+    });
+  }
+
+  Stream<SignInFormState> _performActionOnAuthFacadeWithEmailAndPassword(
+      Future<Either<AuthFailure, Unit>> Function({
+    @required EmailAddress address,
+    @required Password password,
+  })
+          authFacadeAction) async* {
+    final isEmailValid = state.emailAddress.isValid;
+    final isPasswordValid = state.password.isValid;
+
+    Either<AuthFailure, Unit> failureOrSuccess;
+
+    if (isEmailValid && isPasswordValid) {
+      yield state.copyWith(
+        isSubmitting: true,
+        authFailureOrSuccessOption: none(),
+      );
+
+      failureOrSuccess = await authFacadeAction(
+        address: state.emailAddress,
+        password: state.password,
+      );
+    }
+
+    yield state.copyWith(
+      showErrorMessages: false,
+      isSubmitting: true,
+      authFailureOrSuccessOption: optionOf(failureOrSuccess),
+    );
+  }
 }
