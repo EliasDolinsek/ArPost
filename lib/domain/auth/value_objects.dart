@@ -12,7 +12,7 @@ class EmailAddress extends ValueObject<String> {
     return EmailAddress._(validateEmailAddress(input));
   }
 
-  const EmailAddress._(this.value) : assert(value != null);
+  const EmailAddress._(this.value);
 }
 
 class Password extends ValueObject<String> {
@@ -24,5 +24,16 @@ class Password extends ValueObject<String> {
     return Password._(validatePassword(input));
   }
 
-  const Password._(this.value) : assert(value != null);
+  const Password._(this.value);
+}
+
+class URL extends ValueObject<String> {
+  @override
+  final Either<ValueFailure<String>, String> value;
+
+  factory URL(String url) {
+    assert(url != null);
+    return URL._(right(url));
+  }
+  const URL._(this.value);
 }
