@@ -1,5 +1,7 @@
 import 'package:ar_post/domain/auth/auth_failure.dart';
 import 'package:ar_post/domain/auth/i_auth_facade.dart';
+import 'package:ar_post/domain/auth/user.dart' as ar_user;
+import 'package:ar_post/infrastructure/auth/firebase_user_mapper.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ar_post/domain/auth/value_objects.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,4 +84,14 @@ class FirebaseAuthFacade implements IAuthFacade {
       return left(const AuthFailure.serverError());
     }
   }
+
+  @override
+  Future<Option<ar_user.User>> getSignedInUser() async =>
+      optionOf(_firebaseAuth.currentUser?.toDomain());
+
+  @override
+  Future<void> signOut() => Future.wait([
+        _googleSignIn.signOut(),
+        _firebaseAuth.signOut(),
+      ]);
 }
