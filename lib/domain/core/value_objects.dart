@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:ar_post/domain/core/errors.dart';
 import 'package:dartz/dartz.dart';
@@ -59,15 +60,13 @@ class ImageUrl extends ValueObject<String> {
     return ImageUrl._(right(url));
   }
   const ImageUrl._(this.value);
-
-  Future<Image> get imageFile async => Image.network(value.getOrElse(null));
 }
 
-class CachedImage extends ValueObject<Image> {
+class CachedImage extends ValueObject<Uint8List> {
   @override
-  final Either<ValueFailure<Image>, Image> value;
+  final Either<ValueFailure<Uint8List>, Uint8List> value;
 
-  factory CachedImage(Image image) {
+  factory CachedImage(Uint8List image) {
     assert(image != null);
     return CachedImage._(right(image));
   }
