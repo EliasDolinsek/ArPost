@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:ar_post/domain/core/errors.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:uuid/uuid.dart';
 
 import 'failures.dart';
@@ -45,4 +48,29 @@ class UniqueId extends ValueObject<String> {
   }
 
   const UniqueId._(this.value);
+}
+
+class ImageUrl extends ValueObject<String> {
+  @override
+  final Either<ValueFailure<String>, String> value;
+
+  factory ImageUrl(String url) {
+    assert(url != null);
+    return ImageUrl._(right(url));
+  }
+  const ImageUrl._(this.value);
+
+  Future<Image> get imageFile async => Image.network(value.getOrElse(null));
+}
+
+class CachedImage extends ValueObject<Image> {
+  @override
+  final Either<ValueFailure<Image>, Image> value;
+
+  factory CachedImage(Image image) {
+    assert(image != null);
+    return CachedImage._(right(image));
+  }
+
+  const CachedImage._(this.value);
 }
