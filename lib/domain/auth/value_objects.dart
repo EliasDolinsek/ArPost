@@ -1,31 +1,39 @@
-import 'package:ArPost/domain/core/failures.dart';
-import 'package:ArPost/domain/core/value_objects.dart';
-import 'package:ArPost/domain/core/value_validators.dart';
+import 'package:ar_post/domain/core/failures.dart';
+import 'package:ar_post/domain/core/value_objects.dart';
+import 'package:ar_post/domain/core/value_validators.dart';
 import 'package:dartz/dartz.dart';
 
-class EmailAddress extends ValueObject<String>{
-
+class EmailAddress extends ValueObject<String> {
+  @override
   final Either<ValueFailure<String>, String> value;
 
-  const EmailAddress._(this.value) : assert(value != null);
-
-  factory EmailAddress(String input){
+  factory EmailAddress(String input) {
     assert(input != null);
     return EmailAddress._(validateEmailAddress(input));
   }
 
+  const EmailAddress._(this.value);
 }
 
-class Password extends ValueObject<String>{
-
+class Password extends ValueObject<String> {
+  @override
   final Either<ValueFailure<String>, String> value;
 
-  const Password._(this.value) : assert(value != null);
-
-  factory Password(String input){
+  factory Password(String input) {
     assert(input != null);
     return Password._(validatePassword(input));
   }
 
+  const Password._(this.value);
 }
 
+class URL extends ValueObject<String> {
+  @override
+  final Either<ValueFailure<String>, String> value;
+
+  factory URL(String url) {
+    assert(url != null);
+    return URL._(right(url));
+  }
+  const URL._(this.value);
+}
