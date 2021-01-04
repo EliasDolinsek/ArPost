@@ -26,14 +26,3 @@ class Password extends ValueObject<String> {
 
   const Password._(this.value);
 }
-
-class URL extends ValueObject<String> {
-  @override
-  final Either<ValueFailure<String>, String> value;
-
-  factory URL(String url) {
-    assert(url != null);
-    return URL._(right(url));
-  }
-  const URL._(this.value);
-}
