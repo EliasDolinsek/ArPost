@@ -1,3 +1,4 @@
+import 'package:ar_post/presentation/ar/ar_widget.dart';
 import 'package:flutter/material.dart';
 
 class NavigationWidget extends StatefulWidget {
@@ -11,7 +12,7 @@ class _NavigationWidgetState extends State<NavigationWidget>
     with SingleTickerProviderStateMixin {
   final _pages = [
     const Placeholder(),
-    const Placeholder(),
+    const ArWidget(),
     const Placeholder(),
   ];
 
