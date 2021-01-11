@@ -15,25 +15,37 @@ class _NavigationWidgetState extends State<NavigationWidget>
     const Placeholder(),
   ];
 
-  TabController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(vsync: this, length: _pages.length);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    return TabBarView(
-      controller: _controller,
-      children: _pages,
+    return Scaffold(
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard_rounded),
+            label: 'FEED',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            label: 'AR',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'ACCOUNT',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Theme.of(context).primaryColor,
+        onTap: _onItemTapped,
+      ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
