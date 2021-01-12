@@ -1,6 +1,14 @@
 part of 'ar_actions_bloc.dart';
 
-@immutable
-abstract class ArActionsState {}
+@freezed
+abstract class ArActionsState with _$ArActionsState {
+  const factory ArActionsState({
+    @required bool isPlaced,
+    @required bool isCaptured,
+  }) = _ArActionsState;
 
-class ArActionsInitial extends ArActionsState {}
+  factory ArActionsState.initial() => const ArActionsState(
+        isPlaced: false,
+        isCaptured: false,
+      );
+}
