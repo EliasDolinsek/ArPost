@@ -1,4 +1,6 @@
+import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ArControlsWidget extends StatelessWidget {
   @override
@@ -7,21 +9,78 @@ class ArControlsWidget extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 48.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ArButton(iconData: Icons.push_pin),
-          ],
+        child: BlocConsumer<ArActionsBloc, ArActionsState>(
+          builder: (context, state) {
+            if (state.isPlaced) {
+              return _buildPlaced(context);
+            } else {
+              return _buildNotPlaced(context);
+            }
+          },
+          listener: (context, state) => print(state),
         ),
       ),
+    );
+  }
+
+  Widget _buildNotPlaced(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ArButton(
+        iconData: Icons.push_pin,
+        onPressed: () {
+          context.read<ArActionsBloc>().add(const ArActionsEvent.place());
+        },
+      ),
+    );
+  }
+
+  Widget _buildPlaced(BuildContext context) {
+    return Stack(
+      children: [
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ArButton(
+            iconData: Icons.fiber_manual_record,
+            onPressed: () {
+              context.read<ArActionsBloc>().add(const ArActionsEvent.capture());
+            },
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 29.0,
+              right: 55.0,
+            ),
+            child: IconButton(
+                icon: Icon(
+                  Icons.close,
+                  size: 36,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: () {
+                  context
+                      .read<ArActionsBloc>()
+                      .add(const ArActionsEvent.release());
+                }),
+          ),
+        )
+      ],
     );
   }
 }
 
 class ArButton extends StatelessWidget {
   final IconData iconData;
+  final Function() onPressed;
 
-  const ArButton({Key key, this.iconData}) : super(key: key);
+  const ArButton({
+    Key key,
+    this.iconData,
+    this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +102,7 @@ class ArButton extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
               ),
             ),
-            onPressed: () => print("AR BUTTON CLICKED"),
+            onPressed: onPressed,
           ),
         ),
       ],
