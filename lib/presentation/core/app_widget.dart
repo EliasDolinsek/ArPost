@@ -11,6 +11,7 @@ class AppWidget extends StatelessWidget {
       title: "ArCore",
       theme: ThemeData(
         primaryColor: const Color(0xFF5C178B),
+        accentColor: const Color(0xFF5C178B),
         textTheme: GoogleFonts.openSansTextTheme(),
         tabBarTheme: TabBarTheme(
           labelColor: Theme.of(context).primaryColor,

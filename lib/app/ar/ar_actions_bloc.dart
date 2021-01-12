@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
@@ -31,7 +32,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
         yield state.copyWith(isPlaced: false, isCaptured: true);
       },
       submitImageFile: (_SubmitImage value) async* {
-        yield state.copyWith(image: value.file, isCaptured: true);
+        yield state.copyWith(image: some(value.file), isCaptured: true);
       },
     );
   }

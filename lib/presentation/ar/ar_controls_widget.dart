@@ -11,8 +11,8 @@ class ArControlsWidget extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 48.0),
         child: BlocConsumer<ArActionsBloc, ArActionsState>(
           builder: (context, state) {
-            if (state.isPlaced) {
-              return _buildPlaced(context);
+            if (state.isPlaced || state.isCaptured) {
+              return _buildPlacedOrCaptured(context, state);
             } else {
               return _buildNotPlaced(context);
             }
@@ -35,17 +35,12 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaced(BuildContext context) {
+  Widget _buildPlacedOrCaptured(BuildContext context, ArActionsState state) {
     return Stack(
       children: [
         Align(
           alignment: Alignment.bottomCenter,
-          child: ArButton(
-            iconData: Icons.fiber_manual_record,
-            onPressed: () {
-              context.read<ArActionsBloc>().add(const ArActionsEvent.capture());
-            },
-          ),
+          child: _buildCapturedButtonContent(context, state),
         ),
         Align(
           alignment: Alignment.bottomRight,
@@ -55,20 +50,38 @@ class ArControlsWidget extends StatelessWidget {
               right: 55.0,
             ),
             child: IconButton(
-                icon: Icon(
-                  Icons.close,
-                  size: 36,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () {
-                  context
-                      .read<ArActionsBloc>()
-                      .add(const ArActionsEvent.release());
-                }),
+              icon: Icon(
+                Icons.close,
+                size: 36,
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () {
+                context
+                    .read<ArActionsBloc>()
+                    .add(const ArActionsEvent.release());
+              },
+            ),
           ),
         )
       ],
     );
+  }
+
+  Widget _buildCapturedButtonContent(
+      BuildContext context, ArActionsState state) {
+    if (state.isCaptured && state.image.isNone()) {
+      return const Padding(
+        padding: EdgeInsets.only(bottom: 35.0),
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return ArButton(
+        iconData: Icons.fiber_manual_record,
+        onPressed: () {
+          context.read<ArActionsBloc>().add(const ArActionsEvent.capture());
+        },
+      );
+    }
   }
 }
 

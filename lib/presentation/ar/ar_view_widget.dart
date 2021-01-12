@@ -26,7 +26,7 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Widget build(BuildContext context) {
     return BlocListener<ArActionsBloc, ArActionsState>(
       listener: (context, state) {
-        if (state.isCaptured && state.image == null) {
+        if (state.isCaptured && state.image.isNone()) {
           _onCaptureImage();
         }
       },
