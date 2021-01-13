@@ -2,6 +2,8 @@ import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'ar_button.dart';
+
 class ArControlsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -11,10 +13,16 @@ class ArControlsWidget extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 48.0),
         child: BlocBuilder<ArActionsBloc, ArActionsState>(
           builder: (context, state) {
-            if (state.isPlaced || state.isCaptured) {
-              return _buildPlacedOrCaptured(context, state);
+            if (state.action == ArAction.idle) {
+              return _buildIdle(context);
+            } else if (state.action == ArAction.placing) {
+              return _buildLoading();
+            } else if (state.action == ArAction.placed) {
+              return _buildPlaced(context);
+            } else if (state.action == ArAction.capturing) {
+              return _buildLoading();
             } else {
-              return _buildNotPlaced(context);
+              return _buildLoading();
             }
           },
         ),
@@ -22,7 +30,7 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildNotPlaced(BuildContext context) {
+  Widget _buildIdle(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: ArButton(
@@ -34,109 +42,50 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlacedOrCaptured(BuildContext context, ArActionsState state) {
+  Widget _buildPlaced(BuildContext context) {
     return Stack(
-      children: [
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: _buildCapturedButtonContent(context, state),
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: const EdgeInsets.only(
-              bottom: 29.0,
-              right: 55.0,
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.close,
-                size: 36,
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: () {
-                context
-                    .read<ArActionsBloc>()
-                    .add(const ArActionsEvent.release());
-              },
-            ),
-          ),
-        )
-      ],
+      children: [_buildCapture(context), _buildReleaseButton(context)],
     );
   }
 
-  Widget _buildCapturedButtonContent(
-      BuildContext context, ArActionsState state) {
-    if (state.isCaptured && state.image.isNone()) {
-      return const Padding(
-        padding: EdgeInsets.only(bottom: 35.0),
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      return ArButton(
+  Widget _buildCapture(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ArButton(
         iconData: Icons.fiber_manual_record,
         onPressed: () {
           context.read<ArActionsBloc>().add(const ArActionsEvent.capture());
         },
-      );
-    }
-  }
-}
-
-class ArButton extends StatelessWidget {
-  final IconData iconData;
-  final Function() onPressed;
-
-  const ArButton({
-    Key key,
-    this.iconData,
-    this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SizedBox(
-          width: 94,
-          height: 94,
-          child: CustomPaint(painter: CirclePaint(context)),
-        ),
-        SizedBox(
-          width: 92,
-          height: 92,
-          child: IconButton(
-            icon: Center(
-              child: Icon(
-                iconData,
-                size: 38,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            onPressed: onPressed,
-          ),
-        ),
-      ],
+      ),
     );
   }
-}
 
-class CirclePaint extends CustomPainter {
-  final BuildContext context;
-
-  CirclePaint(this.context);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Theme.of(context).primaryColor
-      ..strokeWidth = 10
-      ..style = PaintingStyle.stroke;
-
-    canvas.drawOval(Rect.fromLTWH(0, 0, size.width, size.height), paint);
+  Widget _buildLoading() {
+    return const Padding(
+      padding: EdgeInsets.only(bottom: 35.0),
+      child: CircularProgressIndicator(),
+    );
   }
 
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  Widget _buildReleaseButton(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 29.0,
+          right: 55.0,
+        ),
+        child: IconButton(
+          icon: Icon(
+            Icons.close,
+            size: 36,
+            color: Theme.of(context).primaryColor,
+          ),
+          onPressed: () {
+            context.read<ArActionsBloc>().add(const ArActionsEvent.release());
+          },
+        ),
+      ),
+    );
+  }
 }

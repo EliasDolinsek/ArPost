@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:flutter/widgets.dart';
@@ -17,6 +15,7 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   ARKitController arkitController;
   ARKitReferenceNode node;
   String anchorId;
+  ARKitPlaneAnchor lastAnchor;
 
   @override
   void dispose() {
@@ -28,10 +27,12 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Widget build(BuildContext context) {
     return BlocListener<ArActionsBloc, ArActionsState>(
       listener: (context, state) {
-        if (state.isCaptured && state.image.isNone()) {
-          _onCaptureImage();
-        } else if (!state.isPlaced) {
-          arkitController.remove("main");
+        if (state.action == ArAction.placing) {
+          _addPlane();
+        } else if (state.action == ArAction.capturing) {
+          _captureImage(context);
+        } else if (state.action == ArAction.releasing) {
+          _release();
         }
       },
       child: Screenshot(
@@ -47,33 +48,39 @@ class _ArViewWidgetState extends State<ArViewWidget> {
     );
   }
 
-  Future _onCaptureImage() async {
-    final imageFile = await _captureImage();
-    context.read<ArActionsBloc>().add(
-          ArActionsEvent.submitImageFile(file: imageFile),
-        );
-  }
-
-  Future<File> _captureImage() {
-    return screenshotController.capture();
+  void _release() {
+    arkitController.remove("main");
+    context.read<ArActionsBloc>().add(const ArActionsEvent.notifyReleased());
   }
 
   void _handleAddAnchor(ARKitAnchor anchor) {
     if (anchor is ARKitPlaneAnchor) {
-      _addPlane(arkitController, anchor);
+      lastAnchor = anchor;
     }
   }
 
-  void _addPlane(ARKitController arkitController, ARKitPlaneAnchor anchor) {
-    anchorId = anchor.identifier;
+  Future _captureImage(BuildContext context) async {
+    final image = await screenshotController.capture();
+    context
+        .read<ArActionsBloc>()
+        .add(ArActionsEvent.notifyCaptured(file: image));
+  }
+
+  Future _addPlane() async {
+    while(lastAnchor == null){
+      // Wait
+    }
+
+    anchorId = lastAnchor.identifier;
 
     final node = ARKitNode(
       geometry: ARKitSphere(radius: 0.1),
-      position: Vector3(0, 0, 0),
-      name: "main"
+      position: Vector3.all(0),
+      name: "main",
     );
 
-    arkitController.add(node, parentNodeName: anchor.nodeName);
-  }
 
+    await arkitController.add(node, parentNodeName: lastAnchor.nodeName);
+    context.read<ArActionsBloc>().add(const ArActionsEvent.notifyPlaced());
+  }
 }

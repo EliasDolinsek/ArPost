@@ -22,17 +22,23 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
     ArActionsEvent event,
   ) async* {
     yield* event.map(
-      place: (e) async* {
-        yield state.copyWith(isPlaced: true, isCaptured: false);
+      place: (_Place value) async* {
+        yield state.copyWith(action: ArAction.placing);
       },
-      release: (e) async* {
-        yield state.copyWith(isPlaced: false, isCaptured: false);
+      release: (_Release value) async* {
+        yield state.copyWith(action: ArAction.releasing);
       },
-      capture: (e) async* {
-        yield state.copyWith(isPlaced: false, isCaptured: true);
+      capture: (_Capture value) async* {
+        yield state.copyWith(action: ArAction.capturing);
       },
-      submitImageFile: (_SubmitImage value) async* {
-        yield state.copyWith(image: some(value.file), isCaptured: true);
+      notifyPlaced: (_NotifyPlaced value) async* {
+        yield state.copyWith(action: ArAction.placed);
+      },
+      notifyReleased: (_NotifyRelesed value) async* {
+        yield state.copyWith(action: ArAction.idle);
+      },
+      notifyCaptured: (_NotifyCaptured value) async* {
+        yield state.copyWith(action: ArAction.captured);
       },
     );
   }
