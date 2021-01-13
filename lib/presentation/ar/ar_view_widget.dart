@@ -13,9 +13,8 @@ class ArViewWidget extends StatefulWidget {
 class _ArViewWidgetState extends State<ArViewWidget> {
   ScreenshotController screenshotController = ScreenshotController();
   ARKitController arkitController;
-  ARKitReferenceNode node;
-  String anchorId;
   ARKitPlaneAnchor lastAnchor;
+  ARKitNode node;
 
   @override
   void dispose() {
@@ -26,9 +25,11 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ArActionsBloc, ArActionsState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state.action == ArAction.placing) {
-          _addPlane();
+          if (await _tryAddPlane()) {
+            context.read<ArActionsBloc>().add(ArActionsEvent.notifyPlaced());
+          }
         } else if (state.action == ArAction.capturing) {
           _captureImage(context);
         } else if (state.action == ArAction.releasing) {
@@ -50,12 +51,17 @@ class _ArViewWidgetState extends State<ArViewWidget> {
 
   void _release() {
     arkitController.remove("main");
+    node = null;
     context.read<ArActionsBloc>().add(const ArActionsEvent.notifyReleased());
   }
 
   void _handleAddAnchor(ARKitAnchor anchor) {
     if (anchor is ARKitPlaneAnchor) {
       lastAnchor = anchor;
+      if (context.read<ArActionsBloc>().state.action == ArAction.placing &&
+          node == null) {
+        _tryAddPlane();
+      }
     }
   }
 
@@ -66,21 +72,22 @@ class _ArViewWidgetState extends State<ArViewWidget> {
         .add(ArActionsEvent.notifyCaptured(file: image));
   }
 
-  Future _addPlane() async {
-    while(lastAnchor == null){
-      // Wait
+  Future<bool> _tryAddPlane() async {
+    if (lastAnchor != null) {
+      await _addPlane();
+      return true;
     }
 
-    anchorId = lastAnchor.identifier;
+    return false;
+  }
 
-    final node = ARKitNode(
+  Future _addPlane() async {
+    node = ARKitNode(
       geometry: ARKitSphere(radius: 0.1),
       position: Vector3.all(0),
       name: "main",
     );
 
-
     await arkitController.add(node, parentNodeName: lastAnchor.nodeName);
-    context.read<ArActionsBloc>().add(const ArActionsEvent.notifyPlaced());
   }
 }
