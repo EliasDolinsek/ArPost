@@ -15,6 +15,8 @@ class ArViewWidget extends StatefulWidget {
 class _ArViewWidgetState extends State<ArViewWidget> {
   ScreenshotController screenshotController = ScreenshotController();
   ARKitController arkitController;
+  ARKitReferenceNode node;
+  String anchorId;
 
   @override
   void dispose() {
@@ -28,11 +30,19 @@ class _ArViewWidgetState extends State<ArViewWidget> {
       listener: (context, state) {
         if (state.isCaptured && state.image.isNone()) {
           _onCaptureImage();
+        } else if (!state.isPlaced) {
+          arkitController.remove("main");
         }
       },
       child: Screenshot(
         controller: screenshotController,
-        child: ARKitSceneView(onARKitViewCreated: onARKitViewCreated),
+        child: ARKitSceneView(
+          onARKitViewCreated: (arkitController) {
+            this.arkitController = arkitController;
+            this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
+          },
+          planeDetection: ARPlaneDetection.horizontal,
+        ),
       ),
     );
   }
@@ -48,12 +58,22 @@ class _ArViewWidgetState extends State<ArViewWidget> {
     return screenshotController.capture();
   }
 
-  void onARKitViewCreated(ARKitController arkitController) {
-    this.arkitController = arkitController;
+  void _handleAddAnchor(ARKitAnchor anchor) {
+    if (anchor is ARKitPlaneAnchor) {
+      _addPlane(arkitController, anchor);
+    }
+  }
+
+  void _addPlane(ARKitController arkitController, ARKitPlaneAnchor anchor) {
+    anchorId = anchor.identifier;
+
     final node = ARKitNode(
       geometry: ARKitSphere(radius: 0.1),
-      position: Vector3(0, 0, -0.5),
+      position: Vector3(0, 0, 0),
+      name: "main"
     );
-    this.arkitController.add(node);
+
+    arkitController.add(node, parentNodeName: anchor.nodeName);
   }
+
 }

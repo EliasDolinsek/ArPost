@@ -9,7 +9,7 @@ class ArControlsWidget extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 48.0),
-        child: BlocConsumer<ArActionsBloc, ArActionsState>(
+        child: BlocBuilder<ArActionsBloc, ArActionsState>(
           builder: (context, state) {
             if (state.isPlaced || state.isCaptured) {
               return _buildPlacedOrCaptured(context, state);
@@ -17,7 +17,6 @@ class ArControlsWidget extends StatelessWidget {
               return _buildNotPlaced(context);
             }
           },
-          listener: (context, state) => print(state),
         ),
       ),
     );
