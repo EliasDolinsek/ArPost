@@ -14,15 +14,3 @@ class EmailAddress extends ValueObject<String> {
 
   const EmailAddress._(this.value);
 }
-
-class Password extends ValueObject<String> {
-  @override
-  final Either<ValueFailure<String>, String> value;
-
-  factory Password(String input) {
-    assert(input != null);
-    return Password._(validatePassword(input));
-  }
-
-  const Password._(this.value);
-}
