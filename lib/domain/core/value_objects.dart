@@ -51,17 +51,6 @@ class UniqueId extends ValueObject<String> {
   const UniqueId._(this.value);
 }
 
-class ImageUrl extends ValueObject<String> {
-  @override
-  final Either<ValueFailure<String>, String> value;
-
-  factory ImageUrl(String url) {
-    assert(url != null);
-    return ImageUrl._(right(url));
-  }
-  const ImageUrl._(this.value);
-}
-
 class CachedImage extends ValueObject<Uint8List> {
   @override
   final Either<ValueFailure<Uint8List>, Uint8List> value;
