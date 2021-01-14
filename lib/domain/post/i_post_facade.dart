@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 
 abstract class IPostFacade {
   Future<Either<PostFailure, Post>> publishPost(
-      UniqueId userId, CachedImage image);
+      UniqueId userId, LocalImage image);
   Future<Either<PostFailure, List<Post>>> fetchMostRecentPosts();
   Future<Either<PostFailure, List<Post>>> fetchUserPosts(UniqueId userId);
   Future<Either<PostFailure, Unit>> deletePost(UniqueId postId);

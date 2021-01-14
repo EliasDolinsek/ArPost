@@ -41,7 +41,7 @@ class FirebasePostFacade extends IPostFacade {
 
   @override
   Future<Either<PostFailure, Post>> publishPost(
-      UniqueId userId, CachedImage image) async {
+      UniqueId userId, LocalImage image) async {
     final downloadUrl = await _uploadFileManager.uploadFile(image);
     final postId = Uuid().v1();
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:ar_post/domain/core/errors.dart';
 import 'package:dartz/dartz.dart';
@@ -51,14 +50,14 @@ class UniqueId extends ValueObject<String> {
   const UniqueId._(this.value);
 }
 
-class CachedImage extends ValueObject<Uint8List> {
+class LocalImage extends ValueObject<File> {
   @override
-  final Either<ValueFailure<Uint8List>, Uint8List> value;
+  final Either<ValueFailure<File>, File> value;
 
-  factory CachedImage(Uint8List image) {
+  factory LocalImage(File image) {
     assert(image != null);
-    return CachedImage._(right(image));
+    return LocalImage._(right(image));
   }
 
-  const CachedImage._(this.value);
+  const LocalImage._(this.value);
 }

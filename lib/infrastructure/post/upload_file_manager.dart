@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class UploadFileManager {
-  Future<String> uploadFile(CachedImage image);
+  Future<String> uploadFile(LocalImage image);
 }
 
 @LazySingleton(as: UploadFileManager)
@@ -16,7 +16,7 @@ class FirestoreUploadFileManager implements UploadFileManager {
   FirestoreUploadFileManager(this._firebaseStorage);
 
   @override
-  Future<String> uploadFile(CachedImage image) async {
+  Future<String> uploadFile(LocalImage image) async {
     final id = Uuid().v1();
     final reference = _firebaseStorage.ref().child("$id.png");
     final result = await reference.putData(image.getOrCrash());
