@@ -17,7 +17,7 @@ class FirestoreUploadFileManager implements UploadFileManager {
   Future<String> uploadFile(LocalImage image) async {
     final id = Uuid().v1();
     final reference = _firebaseStorage.ref().child("$id.png");
-    final result = await reference.putData(image.getOrCrash());
+    final result = await reference.putFile(image.getOrCrash());
     return result.ref.getDownloadURL();
   }
 }

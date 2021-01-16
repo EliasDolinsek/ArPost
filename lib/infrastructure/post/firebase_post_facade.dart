@@ -7,6 +7,7 @@ import 'package:ar_post/domain/post/post_failure.dart';
 import 'package:ar_post/domain/post/post.dart';
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
+import 'firebase_post_mapper.dart';
 
 @LazySingleton(as: IPostFacade)
 class FirebasePostFacade extends IPostFacade {
@@ -16,15 +17,20 @@ class FirebasePostFacade extends IPostFacade {
   FirebasePostFacade(this._firebaseFirestore, this._uploadFileManager);
 
   @override
-  Future<Either<PostFailure, Unit>> deletePost(UniqueId postId) {
-    // TODO: implement deletePost
-    throw UnimplementedError();
+  Future<Either<PostFailure, Unit>> deletePost(UniqueId postId) async {
+    _firebaseFirestore.collection("posts").doc(postId.getOrCrash()).delete();
+    return right(unit);
   }
 
   @override
-  Future<Either<PostFailure, List<Post>>> fetchMostRecentPosts() {
-    // TODO: implement fetchMostRecentPosts
-    throw UnimplementedError();
+  Future<Either<PostFailure, List<Post>>> fetchMostRecentPosts(
+      UniqueId userId) async {
+    final posts = await _firebaseFirestore
+        .collection("posts")
+        .orderBy("release_date")
+        .get();
+
+    return right(posts.docs.map((e) => e.toDomainPost(userId)).toList());
   }
 
   @override
@@ -35,19 +41,20 @@ class FirebasePostFacade extends IPostFacade {
 
   @override
   Future<Either<PostFailure, Unit>> likePost(UniqueId postId) {
-    // TODO: implement likePost
-    throw UnimplementedError();
+    
   }
 
   @override
-  Future<Either<PostFailure, Post>> publishPost(
+  Future<Either<PostFailure, Unit>> publishPost(
       UniqueId userId, LocalImage image) async {
     final downloadUrl = await _uploadFileManager.uploadFile(image);
-    final postId = Uuid().v1();
+    final postId = Uuid().v4();
 
     await _firebaseFirestore.collection("posts").doc(postId).set({
       "userId": userId.getOrCrash(),
       "imageUrl": downloadUrl,
     });
+
+    return right(unit);
   }
 }
