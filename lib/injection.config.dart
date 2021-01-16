@@ -12,6 +12,7 @@ import 'package:injectable/injectable.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'app/ar/ar_actions_bloc.dart';
+import 'app/auth/auth_bloc.dart';
 import 'infrastructure/auth/firebase_auth_facade.dart';
 import 'infrastructure/core/firebase_injectable_module.dart';
 import 'infrastructure/post/firebase_post_facade.dart';
@@ -42,6 +43,7 @@ GetIt $initGetIt(
   gh.factory<SignInFormBloc>(() => SignInFormBloc(get<IAuthFacade>()));
   gh.lazySingleton<UploadFileManager>(
       () => FirestoreUploadFileManager(get<FirebaseStorage>()));
+  gh.factory<AuthBloc>(() => AuthBloc(get<IAuthFacade>()));
   gh.lazySingleton<IPostFacade>(() =>
       FirebasePostFacade(get<FirebaseFirestore>(), get<UploadFileManager>()));
   return get;
