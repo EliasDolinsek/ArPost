@@ -1,3 +1,4 @@
+import 'package:ar_post/presentation/account/account_widget.dart';
 import 'package:ar_post/presentation/ar/ar_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class _NavigationWidgetState extends State<NavigationWidget>
   final _pages = [
     const Placeholder(),
     const ArWidget(),
-    const Placeholder(),
+    const AccountWidget(),
   ];
 
   int _selectedIndex = 0;

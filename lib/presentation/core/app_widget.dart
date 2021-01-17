@@ -1,5 +1,9 @@
+import 'package:ar_post/app/auth/auth_bloc.dart';
+import 'package:ar_post/injection.dart';
 import 'package:ar_post/presentation/nav/navigation_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppWidget extends StatelessWidget {
@@ -7,6 +11,7 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Firebase.initializeApp();
     return MaterialApp(
       title: "ArCore",
       theme: ThemeData(
@@ -19,12 +24,16 @@ class AppWidget extends StatelessWidget {
           indicatorSize: TabBarIndicatorSize.label,
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedIconTheme: IconThemeData(size: 32),
-          unselectedIconTheme: IconThemeData(size: 28),
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)
-        ),
+            selectedIconTheme: IconThemeData(size: 32),
+            unselectedIconTheme: IconThemeData(size: 28),
+            selectedLabelStyle:
+                TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
       ),
-      home: const NavigationWidget(),
+      home: BlocProvider(
+        create: (context) =>
+            getIt<AuthBloc>()..add(const AuthEvent.authCheckRequested()),
+        child: const NavigationWidget(),
+      ),
     );
   }
 }
