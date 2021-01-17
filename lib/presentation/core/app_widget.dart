@@ -24,10 +24,11 @@ class AppWidget extends StatelessWidget {
           indicatorSize: TabBarIndicatorSize.label,
         ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            selectedIconTheme: IconThemeData(size: 32),
-            unselectedIconTheme: IconThemeData(size: 28),
-            selectedLabelStyle:
-                TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+          selectedIconTheme: IconThemeData(size: 32),
+          unselectedIconTheme: IconThemeData(size: 28),
+          selectedLabelStyle:
+              TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        ),
       ),
       home: BlocProvider(
         create: (context) =>

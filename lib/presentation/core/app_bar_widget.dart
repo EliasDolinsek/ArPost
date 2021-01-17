@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class AppBarWidget extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const AppBarWidget({Key key, @required this.title, this.children = const []})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            title,
+            style: GoogleFonts.openSans(
+                color: Colors.black, fontWeight: FontWeight.w600, fontSize: 28),
+          ),
+        ),
+        centerTitle: false,
+        backgroundColor: Colors.white,
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 32.0),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
