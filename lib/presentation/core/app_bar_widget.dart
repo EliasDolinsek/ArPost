@@ -26,7 +26,12 @@ class AppBarWidget extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 32.0),
-          ...children,
+          ...children
+              .map((e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: e,
+                  ))
+              .toList(),
         ],
       ),
     );

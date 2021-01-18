@@ -15,17 +15,36 @@ class AccountSettingsWidget extends StatelessWidget {
       title: "Account",
       children: [
         TitledContentWidget(
-            title: "Details",
-            child: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                return state.map(
-                  initial: (value) => _buildNotAuthenticated(),
-                  authenticated: (value) =>
-                      _buildEmailField(context, value.user),
-                  unauthenticated: (value) => _buildNotAuthenticated(),
-                );
-              },
-            ))
+          title: "Details",
+          child: BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return state.map(
+                initial: (value) => _buildNotAuthenticated(),
+                authenticated: (value) => _buildEmailField(context, value.user),
+                unauthenticated: (value) => _buildNotAuthenticated(),
+              );
+            },
+          ),
+        ),
+        HeaderContentCard(
+          header: "Account actions",
+          child: Column(
+            children: [
+              const SizedBox(height: 8.0),
+              ListTile(
+                title: const Text("Sign Out"),
+                onTap: () =>
+                    context.read<AuthBloc>().add(const AuthEvent.signedOut()),
+              ),
+              const Divider(),
+              ListTile(
+                title: const Text("Your Posts"),
+                onTap: () => print("YOUR POSTS"),
+              ),
+              const SizedBox(height: 8.0)
+            ],
+          ),
+        )
       ],
     );
   }
