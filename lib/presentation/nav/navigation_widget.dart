@@ -1,6 +1,10 @@
+import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:ar_post/presentation/account/account_widget.dart';
 import 'package:ar_post/presentation/ar/ar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../injection.dart';
 
 class NavigationWidget extends StatefulWidget {
   const NavigationWidget({Key key}) : super(key: key);

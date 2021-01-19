@@ -58,5 +58,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<string>YES</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Save image to your gallery</string>
 </dict>
 </plist>

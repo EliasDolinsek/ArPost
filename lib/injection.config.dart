@@ -15,9 +15,9 @@ import 'app/ar/ar_actions_bloc.dart';
 import 'app/auth/auth_bloc.dart';
 import 'infrastructure/auth/firebase_auth_facade.dart';
 import 'infrastructure/core/firebase_injectable_module.dart';
-import 'infrastructure/post/firebase_post_facade.dart';
 import 'domain/auth/i_auth_facade.dart';
 import 'domain/post/i_post_facade.dart';
+import 'infrastructure/post/post_facade_default_impl.dart';
 import 'app/auth/sign_in_form/sign_in_form_bloc.dart';
 import 'infrastructure/post/upload_file_manager.dart';
 
@@ -31,7 +31,6 @@ GetIt $initGetIt(
 }) {
   final gh = GetItHelper(get, environment, environmentFilter);
   final firebaseInjectableModule = _$FirebaseInjectableModule();
-  gh.factory<ArActionsBloc>(() => ArActionsBloc());
   gh.lazySingleton<FirebaseAuth>(() => firebaseInjectableModule.firebaseAuth);
   gh.lazySingleton<FirebaseFirestore>(
       () => firebaseInjectableModule.firebaseFirestore);
@@ -44,8 +43,9 @@ GetIt $initGetIt(
   gh.lazySingleton<UploadFileManager>(
       () => FirestoreUploadFileManager(get<FirebaseStorage>()));
   gh.factory<AuthBloc>(() => AuthBloc(get<IAuthFacade>()));
-  gh.lazySingleton<IPostFacade>(() =>
-      FirebasePostFacade(get<FirebaseFirestore>(), get<UploadFileManager>()));
+  gh.lazySingleton<IPostFacade>(() => PostFacadeDefaultImpl(
+      get<FirebaseFirestore>(), get<UploadFileManager>()));
+  gh.factory<ArActionsBloc>(() => ArActionsBloc(get<IPostFacade>()));
   return get;
 }
 

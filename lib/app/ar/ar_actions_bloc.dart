@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ar_post/domain/core/value_objects.dart';
+import 'package:ar_post/domain/post/i_post_facade.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -15,7 +17,9 @@ part 'ar_actions_bloc.freezed.dart';
 
 @injectable
 class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
-  ArActionsBloc() : super(ArActionsState.initial());
+  final IPostFacade postFacade;
+
+  ArActionsBloc(this.postFacade) : super(ArActionsState.initial());
 
   @override
   Stream<ArActionsState> mapEventToState(
@@ -38,7 +42,16 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
         yield state.copyWith(action: ArAction.idle);
       },
       notifyCaptured: (_NotifyCaptured value) async* {
-        yield state.copyWith(action: ArAction.captured);
+        yield state.copyWith(
+          action: ArAction.captured,
+          image: some(value.file),
+        );
+      },
+      saveImageToGallery: (_ImageSaveToGallery value) async* {
+        yield state.copyWith(action: ArAction.saving);
+        postFacade
+            .savePostLocally(LocalImage(state.image.getOrElse(() => null)));
+        yield state.copyWith(action: ArAction.saved, image: none());
       },
     );
   }

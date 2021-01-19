@@ -4,8 +4,10 @@ import 'package:ar_post/domain/post/post_failure.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class IPostFacade {
-  Future<Either<PostFailure, Unit>> publishPost(
-      UniqueId userId, LocalImage image);
+  Future<Either<PostFailure, Unit>> publishPost(UniqueId userId,
+      LocalImage image);
+
+  Future<Either<PostFailure, Unit>> savePostLocally(LocalImage image);
 
   Future<Either<PostFailure, List<Post>>> fetchMostRecentPosts(UniqueId userId);
 

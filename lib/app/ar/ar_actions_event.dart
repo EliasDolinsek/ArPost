@@ -14,4 +14,6 @@ abstract class ArActionsEvent with _$ArActionsEvent {
   const factory ArActionsEvent.release() = _Release;
 
   const factory ArActionsEvent.notifyReleased() = _NotifyRelesed;
+
+  const factory ArActionsEvent.saveImageToGallery() = _ImageSaveToGallery;
 }

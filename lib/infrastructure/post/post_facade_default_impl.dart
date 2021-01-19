@@ -5,16 +5,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ar_post/domain/post/post_failure.dart';
 import 'package:ar_post/domain/post/post.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 import 'firebase_post_mapper.dart';
 
 @LazySingleton(as: IPostFacade)
-class FirebasePostFacade extends IPostFacade {
+class PostFacadeDefaultImpl extends IPostFacade {
   final FirebaseFirestore _firebaseFirestore;
   final UploadFileManager _uploadFileManager;
 
-  FirebasePostFacade(this._firebaseFirestore, this._uploadFileManager);
+  PostFacadeDefaultImpl(this._firebaseFirestore, this._uploadFileManager);
 
   @override
   Future<Either<PostFailure, Unit>> deletePost(UniqueId postId) async {
@@ -40,9 +41,7 @@ class FirebasePostFacade extends IPostFacade {
   }
 
   @override
-  Future<Either<PostFailure, Unit>> likePost(UniqueId postId) {
-    
-  }
+  Future<Either<PostFailure, Unit>> likePost(UniqueId postId) {}
 
   @override
   Future<Either<PostFailure, Unit>> publishPost(
@@ -55,6 +54,12 @@ class FirebasePostFacade extends IPostFacade {
       "imageUrl": downloadUrl,
     });
 
+    return right(unit);
+  }
+
+  @override
+  Future<Either<PostFailure, Unit>> savePostLocally(LocalImage image) async {
+    ImageGallerySaver.saveFile(image.getOrCrash().path);
     return right(unit);
   }
 }

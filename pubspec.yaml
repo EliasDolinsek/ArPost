@@ -24,6 +24,7 @@ dependencies:
   uuid: ^2.2.2
   google_fonts: ^1.1.1
   screenshot: ^0.2.0
+  image_gallery_saver: ^1.6.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
