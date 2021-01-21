@@ -8,6 +8,7 @@ import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
+import 'package:native_screenshot/native_screenshot.dart';
 
 part 'ar_actions_event.dart';
 
@@ -25,6 +26,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
   Stream<ArActionsState> mapEventToState(
     ArActionsEvent event,
   ) async* {
+    print(event);
     yield* event.map(
       place: (_Place value) async* {
         yield state.copyWith(action: ArAction.placing);
@@ -34,6 +36,13 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       },
       capture: (_Capture value) async* {
         yield state.copyWith(action: ArAction.capturing);
+        Future.delayed(
+          const Duration(milliseconds: 500),
+          () async {
+            final path = await NativeScreenshot.takeScreenshot();
+            add(ArActionsEvent.notifyCaptured(file: File(path)));
+          },
+        );
       },
       notifyPlaced: (_NotifyPlaced value) async* {
         yield state.copyWith(action: ArAction.placed);

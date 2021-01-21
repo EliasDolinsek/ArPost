@@ -14,17 +14,14 @@ class ArWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<ArActionsBloc>(),
-      child: BlocListener<ArActionsBloc, ArActionsState>(
-        listener: (BuildContext context, state) {
-          if (state.action == ArAction.captured && state.image.isSome()) {
-            _showShareSheet(context, state.image.getOrElse(() => null));
-          }
-        },
-        child: Stack(
-          children: [ArViewWidget(), ArControlsWidget()],
-        ),
+    return BlocListener<ArActionsBloc, ArActionsState>(
+      listener: (BuildContext context, state) {
+        if (state.action == ArAction.captured && state.image.isSome()) {
+          _showShareSheet(context, state.image.getOrElse(() => null));
+        }
+      },
+      child: Stack(
+        children: [ArViewWidget(), ArControlsWidget()],
       ),
     );
   }

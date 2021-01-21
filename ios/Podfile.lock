@@ -348,6 +348,8 @@ PODS:
     - nanopb/encode (= 1.30906.0)
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
+  - native_screenshot (0.0.1):
+    - Flutter
   - path_provider (0.0.1):
     - Flutter
   - PromisesObjC (1.2.12)
@@ -361,6 +363,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - image_gallery_saver (from `.symlinks/plugins/image_gallery_saver/ios`)
+  - native_screenshot (from `.symlinks/plugins/native_screenshot/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
 
 SPEC REPOS:
@@ -402,6 +405,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_sign_in/ios"
   image_gallery_saver:
     :path: ".symlinks/plugins/image_gallery_saver/ios"
+  native_screenshot:
+    :path: ".symlinks/plugins/native_screenshot/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
 
@@ -432,6 +437,7 @@ SPEC CHECKSUMS:
   image_gallery_saver: 259eab68fb271cfd57d599904f7acdc7832e7ef2
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
+  native_screenshot: 70900984bca8d5f42acf68611b8214b32a9f0deb
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
 

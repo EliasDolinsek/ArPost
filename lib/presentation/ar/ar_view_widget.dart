@@ -33,8 +33,6 @@ class _ArViewWidgetState extends State<ArViewWidget> {
                 .read<ArActionsBloc>()
                 .add(const ArActionsEvent.notifyPlaced());
           }
-        } else if (state.action == ArAction.capturing) {
-          _captureImage(context);
         } else if (state.action == ArAction.releasing) {
           _release();
         }
@@ -73,13 +71,6 @@ class _ArViewWidgetState extends State<ArViewWidget> {
         }
       }
     }
-  }
-
-  Future _captureImage(BuildContext context) async {
-    final image = await screenshotController.capture();
-    context
-        .read<ArActionsBloc>()
-        .add(ArActionsEvent.notifyCaptured(file: image));
   }
 
   Future<bool> _tryAddPlane() async {

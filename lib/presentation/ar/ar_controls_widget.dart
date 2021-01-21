@@ -20,7 +20,7 @@ class ArControlsWidget extends StatelessWidget {
             } else if (state.action == ArAction.placed) {
               return _buildPlaced(context);
             } else if (state.action == ArAction.capturing) {
-              return _buildLoading();
+              return Container();
             } else {
               return _buildLoading();
             }

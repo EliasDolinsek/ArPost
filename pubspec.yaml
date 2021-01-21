@@ -25,6 +25,7 @@ dependencies:
   google_fonts: ^1.1.1
   screenshot: ^0.2.0
   image_gallery_saver: ^1.6.7
+  native_screenshot: ^0.0.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

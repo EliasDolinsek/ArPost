@@ -25,27 +25,39 @@ class _NavigationWidgetState extends State<NavigationWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_rounded),
-            label: 'FEED',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera),
-            label: 'AR',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'ACCOUNT',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
-        onTap: _onItemTapped,
+    return BlocProvider(
+      create: (_) => getIt<ArActionsBloc>(),
+      child: BlocBuilder<ArActionsBloc, ArActionsState>(
+        builder: (context, state) {
+          return Scaffold(
+            body: _pages[_selectedIndex],
+            bottomNavigationBar:
+                state.action == ArAction.capturing ? null : _buildNavbar(),
+          );
+        },
       ),
+    );
+  }
+
+  Widget _buildNavbar() {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.dashboard_rounded),
+          label: 'FEED',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.camera),
+          label: 'AR',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'ACCOUNT',
+        ),
+      ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Theme.of(context).primaryColor,
+      onTap: _onItemTapped,
     );
   }
 
