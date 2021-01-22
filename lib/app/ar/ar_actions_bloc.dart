@@ -26,7 +26,6 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
   Stream<ArActionsState> mapEventToState(
     ArActionsEvent event,
   ) async* {
-    print(event);
     yield* event.map(
       place: (_Place value) async* {
         yield state.copyWith(action: ArAction.placing);
@@ -37,7 +36,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       capture: (_Capture value) async* {
         yield state.copyWith(action: ArAction.capturing);
         Future.delayed(
-          const Duration(milliseconds: 500),
+          const Duration(milliseconds: 200),
           () async {
             final path = await NativeScreenshot.takeScreenshot();
             add(ArActionsEvent.notifyCaptured(file: File(path)));
@@ -57,10 +56,13 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
         );
       },
       saveImageToGallery: (_ImageSaveToGallery value) async* {
-        yield state.copyWith(action: ArAction.saving);
+        yield state.copyWith(action: ArAction.publishing);
         postFacade
             .savePostLocally(LocalImage(state.image.getOrElse(() => null)));
-        yield state.copyWith(action: ArAction.saved, image: none());
+        yield state.copyWith(action: ArAction.published, image: none());
+      },
+      notifyPublishedAcknowledged: (_NotifyPublishedAcknowledged value) async* {
+        yield state.copyWith(action: ArAction.placed, image: none());
       },
     );
   }

@@ -18,7 +18,7 @@ class ArControlsWidget extends StatelessWidget {
             } else if (state.action == ArAction.placing) {
               return _buildLoading();
             } else if (state.action == ArAction.placed) {
-              return _buildPlaced(context);
+              return _buildPlacedOrCaptured(context);
             } else if (state.action == ArAction.capturing) {
               return Container();
             } else {
@@ -42,7 +42,7 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaced(BuildContext context) {
+  Widget _buildPlacedOrCaptured(BuildContext context) {
     return Stack(
       children: [_buildCapture(context), _buildReleaseButton(context)],
     );
@@ -79,9 +79,12 @@ class ArControlsWidget extends StatelessWidget {
           icon: Icon(
             Icons.close,
             size: 36,
-            color: Theme.of(context).primaryColor,
+            color: Theme
+                .of(context)
+                .primaryColor,
           ),
           onPressed: () {
+            print("CALLED");
             context.read<ArActionsBloc>().add(const ArActionsEvent.release());
           },
         ),

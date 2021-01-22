@@ -13,4 +13,13 @@ abstract class ArActionsState with _$ArActionsState {
       );
 }
 
-enum ArAction { idle, placing, placed, capturing, captured, saving, saved, releasing }
+enum ArAction {
+  idle,
+  placing,
+  placed,
+  capturing,
+  captured,
+  publishing,
+  published,
+  releasing
+}
