@@ -18,8 +18,8 @@ class ShareImageSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => actionsBloc,
+    return BlocProvider.value(
+      value: actionsBloc,
       child: SafeArea(child: BlocBuilder<ArActionsBloc, ArActionsState>(
         builder: (context, state) {
           if (state.action == ArAction.publishing) {
@@ -57,7 +57,8 @@ class ShareImageSheetWidget extends StatelessWidget {
             child: ArPostButton(
               text: "CLOSE",
               onPressed: () {
-                actionsBloc
+                context
+                    .read<ArActionsBloc>()
                     .add(const ArActionsEvent.notifyPublishedAcknowledged());
                 Navigator.pop(context);
               },
@@ -97,7 +98,9 @@ class ShareImageSheetWidget extends StatelessWidget {
         ),
         FlatButton.icon(
           onPressed: () {
-            actionsBloc.add(const ArActionsEvent.saveImageToGallery());
+            context
+                .read<ArActionsBloc>()
+                .add(const ArActionsEvent.saveImageToGallery());
           },
           icon: const Icon(Icons.get_app),
           label: Text(

@@ -68,6 +68,7 @@ class ArControlsWidget extends StatelessWidget {
   }
 
   Widget _buildReleaseButton(BuildContext context) {
+    print("BUILD RELEASE BUTTON");
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
@@ -84,7 +85,6 @@ class ArControlsWidget extends StatelessWidget {
                 .primaryColor,
           ),
           onPressed: () {
-            print("CALLED");
             context.read<ArActionsBloc>().add(const ArActionsEvent.release());
           },
         ),

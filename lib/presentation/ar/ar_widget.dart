@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
-import 'package:ar_post/injection.dart';
 import 'package:ar_post/presentation/ar/share_image_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
