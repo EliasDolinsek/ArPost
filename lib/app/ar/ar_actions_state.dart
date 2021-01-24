@@ -4,7 +4,7 @@ part of 'ar_actions_bloc.dart';
 abstract class ArActionsState with _$ArActionsState {
   const factory ArActionsState({
     @required ArAction action,
-    @required Option<File> image,
+    @required Option<LocalImage> image,
   }) = _ArActionsState;
 
   factory ArActionsState.initial() => ArActionsState(

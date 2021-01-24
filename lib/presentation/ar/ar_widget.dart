@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
+import 'package:ar_post/app/auth/auth_bloc.dart';
+import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/presentation/ar/share_image_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,14 +27,17 @@ class ArWidget extends StatelessWidget {
     );
   }
 
-  void _showShareSheet(BuildContext context, File imageFile) {
+  void _showShareSheet(BuildContext context, LocalImage imageFile) {
     final actionsBloc = context.read<ArActionsBloc>();
+    final authBloc = context.read<AuthBloc>();
+
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return ShareImageSheetWidget(
-          imageFile: imageFile,
+          localImage: imageFile,
           actionsBloc: actionsBloc,
+          authBloc: authBloc,
         );
       },
       shape: const RoundedRectangleBorder(

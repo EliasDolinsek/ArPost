@@ -8,7 +8,7 @@ abstract class ArActionsEvent with _$ArActionsEvent {
 
   const factory ArActionsEvent.capture() = _Capture;
 
-  const factory ArActionsEvent.notifyCaptured({@required File file}) =
+  const factory ArActionsEvent.notifyCaptured({@required LocalImage file}) =
       _NotifyCaptured;
 
   const factory ArActionsEvent.release() = _Release;
@@ -16,6 +16,9 @@ abstract class ArActionsEvent with _$ArActionsEvent {
   const factory ArActionsEvent.notifyReleased() = _NotifyRelesed;
 
   const factory ArActionsEvent.saveImageToGallery() = _ImageSaveToGallery;
+
+  const factory ArActionsEvent.shareImage({@required UniqueId userId}) =
+      _ShareImage;
 
   const factory ArActionsEvent.notifyPublishedAcknowledged() =
       _NotifyPublishedAcknowledged;

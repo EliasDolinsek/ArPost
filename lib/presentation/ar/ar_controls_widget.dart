@@ -68,7 +68,6 @@ class ArControlsWidget extends StatelessWidget {
   }
 
   Widget _buildReleaseButton(BuildContext context) {
-    print("BUILD RELEASE BUTTON");
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
