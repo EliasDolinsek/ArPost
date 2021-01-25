@@ -9,6 +9,7 @@ abstract class Post with _$Post {
   const factory Post({
     @required UniqueId id,
     @required String imageUrl,
+    @required String userEmail,
     @required int likes,
     @required bool liked
   }) = _RemotePost;

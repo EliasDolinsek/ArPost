@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:ar_post/domain/auth/user.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/domain/post/i_post_facade.dart';
 import 'package:bloc/bloc.dart';
@@ -60,7 +61,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       shareImage: (_ShareImage value) async* {
         yield state.copyWith(action: ArAction.publishing);
         await postFacade.publishPost(
-            value.userId, state.image.getOrElse(() => null));
+            value.user, state.image.getOrElse(() => null));
         yield state.copyWith(action: ArAction.published, image: none());
       },
     );

@@ -17,7 +17,7 @@ abstract class ArActionsEvent with _$ArActionsEvent {
 
   const factory ArActionsEvent.saveImageToGallery() = _ImageSaveToGallery;
 
-  const factory ArActionsEvent.shareImage({@required UniqueId userId}) =
+  const factory ArActionsEvent.shareImage({@required User user}) =
       _ShareImage;
 
   const factory ArActionsEvent.notifyPublishedAcknowledged() =

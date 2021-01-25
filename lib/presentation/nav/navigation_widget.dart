@@ -1,6 +1,8 @@
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
+import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/presentation/account/account_widget.dart';
 import 'package:ar_post/presentation/ar/ar_widget.dart';
+import 'package:ar_post/presentation/posts/feed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,7 +18,7 @@ class NavigationWidget extends StatefulWidget {
 class _NavigationWidgetState extends State<NavigationWidget>
     with SingleTickerProviderStateMixin {
   final _pages = [
-    const Placeholder(),
+    const FeedWidget(),
     const ArWidget(),
     const AccountWidget(),
   ];
@@ -26,15 +28,18 @@ class _NavigationWidgetState extends State<NavigationWidget>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<ArActionsBloc>(),
-      child: BlocBuilder<ArActionsBloc, ArActionsState>(
-        builder: (context, state) {
-          return Scaffold(
-            body: _pages[_selectedIndex],
-            bottomNavigationBar:
-                state.action == ArAction.capturing ? null : _buildNavbar(),
-          );
-        },
+      create: (context) => getIt<PostsBloc>(),
+      child: BlocProvider(
+        create: (_) => getIt<ArActionsBloc>(),
+        child: BlocBuilder<ArActionsBloc, ArActionsState>(
+          builder: (context, state) {
+            return Scaffold(
+              body: _pages[_selectedIndex],
+              bottomNavigationBar:
+                  state.action == ArAction.capturing ? null : _buildNavbar(),
+            );
+          },
+        ),
       ),
     );
   }

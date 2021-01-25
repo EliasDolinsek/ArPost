@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 extension QueryDocumentSnapshotDomainX on QueryDocumentSnapshot {
   Post toDomainPost(UniqueId userId) {
-    final likesList = data()["likes"] as List<String>;
+    final likesList =
+        (data()["likes"] as List).map((e) => e as String).toList();
     return Post(
-      id: UniqueId.fromUniqueString(data()["id"] as String),
+      id: UniqueId.fromUniqueString(id),
       imageUrl: data()["imageUrl"] as String,
       likes: likesList.length,
       liked: likesList.contains(userId.getOrCrash()),
+      userEmail: data()["userEmail"] as String,
     );
   }
 }

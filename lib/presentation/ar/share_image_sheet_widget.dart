@@ -1,5 +1,6 @@
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:ar_post/app/auth/auth_bloc.dart';
+import 'package:ar_post/domain/auth/user.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/presentation/core/arpost_button.dart';
 import 'package:flutter/material.dart';
@@ -142,7 +143,7 @@ class ShareImageSheetWidget extends StatelessWidget {
               return state.map(
                 initial: (value) => _buildDisabledShareButton(),
                 authenticated: (value) =>
-                    _buildEnabledShareButton(context, value.user.id),
+                    _buildEnabledShareButton(context, value.user),
                 unauthenticated: (value) => _buildDisabledShareButton(),
               );
             },
@@ -152,13 +153,13 @@ class ShareImageSheetWidget extends StatelessWidget {
     ];
   }
 
-  Widget _buildEnabledShareButton(BuildContext context, UniqueId userId) {
+  Widget _buildEnabledShareButton(BuildContext context, User user) {
     return ArPostButton(
       text: "SHARE",
       onPressed: () {
         context
             .read<ArActionsBloc>()
-            .add(ArActionsEvent.shareImage(userId: userId));
+            .add(ArActionsEvent.shareImage(user: user));
       },
     );
   }

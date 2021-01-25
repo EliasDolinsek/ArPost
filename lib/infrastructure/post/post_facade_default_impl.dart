@@ -1,3 +1,4 @@
+import 'package:ar_post/domain/auth/user.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/domain/post/i_post_facade.dart';
 import 'package:ar_post/infrastructure/post/upload_file_manager.dart';
@@ -28,7 +29,7 @@ class PostFacadeDefaultImpl extends IPostFacade {
       UniqueId userId) async {
     final posts = await _firebaseFirestore
         .collection("posts")
-        .orderBy("release_date")
+        .orderBy("releaseDate")
         .get();
 
     return right(posts.docs.map((e) => e.toDomainPost(userId)).toList());
@@ -45,13 +46,16 @@ class PostFacadeDefaultImpl extends IPostFacade {
 
   @override
   Future<Either<PostFailure, Unit>> publishPost(
-      UniqueId userId, LocalImage image) async {
+      User user, LocalImage image) async {
     final downloadUrl = await _uploadFileManager.uploadFile(image);
     final postId = Uuid().v4();
 
     await _firebaseFirestore.collection("posts").doc(postId).set({
-      "userId": userId.getOrCrash(),
+      "userId": user.id.getOrCrash(),
       "imageUrl": downloadUrl,
+      "likes": [user.id.getOrCrash()],
+      "userEmail": user.emailAddress.getOrCrash(),
+      "releaseDate": DateTime.now()
     });
 
     return right(unit);

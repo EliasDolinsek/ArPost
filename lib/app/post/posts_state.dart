@@ -1,7 +1,7 @@
 part of 'posts_bloc.dart';
 
 @freezed
-abstract class PostsState {
+abstract class PostsState with _$PostsState {
   const factory PostsState.initial() = _Initial;
   const factory PostsState.postsLoaded(List<Post> posts) = _PostsLoaded;
   const factory PostsState.postsLoadingFailure() = _PostsLoadingFailure;
