@@ -29,6 +29,9 @@ class AppWidget extends StatelessWidget {
           selectedLabelStyle:
               TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
         ),
+        appBarTheme: const AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
       ),
       home: BlocProvider(
         create: (context) =>

@@ -12,7 +12,7 @@ part 'auth_state.dart';
 
 part 'auth_bloc.freezed.dart';
 
-@injectable
+@Singleton()
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   final IAuthFacade _authFacade;

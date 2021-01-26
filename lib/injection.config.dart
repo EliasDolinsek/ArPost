@@ -43,11 +43,13 @@ GetIt $initGetIt(
   gh.factory<SignInFormBloc>(() => SignInFormBloc(get<IAuthFacade>()));
   gh.lazySingleton<UploadFileManager>(
       () => FirestoreUploadFileManager(get<FirebaseStorage>()));
-  gh.factory<AuthBloc>(() => AuthBloc(get<IAuthFacade>()));
   gh.lazySingleton<IPostFacade>(() => PostFacadeDefaultImpl(
       get<FirebaseFirestore>(), get<UploadFileManager>()));
-  gh.factory<PostsBloc>(() => PostsBloc(get<IPostFacade>()));
   gh.factory<ArActionsBloc>(() => ArActionsBloc(get<IPostFacade>()));
+
+  // Eager singletons must be registered in the right order
+  gh.singleton<AuthBloc>(AuthBloc(get<IAuthFacade>()));
+  gh.singleton<PostsBloc>(PostsBloc(get<IPostFacade>()));
   return get;
 }
 

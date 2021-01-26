@@ -16,8 +16,11 @@ class PostWidget extends StatelessWidget {
           Container(
             height: 500,
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: NetworkImage(post.imageUrl), fit: BoxFit.fitWidth)),
+              image: DecorationImage(
+                image: NetworkImage(post.imageUrl),
+                fit: BoxFit.fitWidth,
+              ),
+            ),
           ),
           const SizedBox(height: 4.0),
           Padding(

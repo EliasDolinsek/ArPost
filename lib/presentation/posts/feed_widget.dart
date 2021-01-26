@@ -27,12 +27,8 @@ class FeedWidget extends StatelessWidget {
     return BlocBuilder<PostsBloc, PostsState>(
       builder: (context, state) {
         return state.map(
-          initial: (_) {
-            final postsBloc = BlocProvider.of<PostsBloc>(context);
-            postsBloc.add(PostsEvent.loadMostRecentPosts(userId: userId));
-            return _buildLoading();
-          },
-          postsLoaded: (value) {
+          initial: (_) => _buildLoadingAndRequestPosts(context, userId),
+          mostRecentPostsLoaded: (value) {
             return RefreshIndicator(
               onRefresh: () async {
                 context
@@ -44,15 +40,25 @@ class FeedWidget extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return PostWidget(post: value.posts[index]);
                 },
-                separatorBuilder: (context, index) => const SizedBox(height: 32.0),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 32.0),
               ),
             );
           },
           postsLoadingFailure: (_) => _buildFailure(),
           loading: (_) => _buildLoading(),
+          userPostsLoaded: (UserPostsLoaded value) =>
+              _buildLoadingAndRequestPosts(context, userId),
         );
       },
     );
+  }
+
+  Widget _buildLoadingAndRequestPosts(
+      BuildContext context, UniqueId userId) {
+    final postsBloc = BlocProvider.of<PostsBloc>(context);
+    postsBloc.add(PostsEvent.loadMostRecentPosts(userId: userId));
+    return _buildLoading();
   }
 
   Widget _buildLoading() {

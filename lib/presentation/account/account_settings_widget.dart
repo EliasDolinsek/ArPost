@@ -1,7 +1,9 @@
 import 'package:ar_post/app/auth/auth_bloc.dart';
+import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/domain/auth/user.dart';
 import 'package:ar_post/presentation/core/app_bar_widget.dart';
 import 'package:ar_post/presentation/core/content_widget.dart';
+import 'package:ar_post/presentation/posts/user_posts_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,7 +41,11 @@ class AccountSettingsWidget extends StatelessWidget {
               const Divider(),
               ListTile(
                 title: const Text("Your Posts"),
-                onTap: () => print("YOUR POSTS"),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const UserPostsWidget(),
+                  ));
+                },
               ),
               const SizedBox(height: 8.0)
             ],

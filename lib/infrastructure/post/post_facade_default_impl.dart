@@ -36,17 +36,22 @@ class PostFacadeDefaultImpl extends IPostFacade {
   }
 
   @override
-  Future<Either<PostFailure, List<Post>>> fetchUserPosts(UniqueId userId) {
-    // TODO: implement fetchUserPosts
-    throw UnimplementedError();
+  Future<Either<PostFailure, List<Post>>> fetchUserPosts(
+      UniqueId userId) async {
+    final posts = await _firebaseFirestore
+        .collection("posts")
+        .where("userId", isEqualTo: userId.getOrCrash())
+        .get();
+
+    return right(posts.docs.map((e) => e.toDomainPost(userId)).toList());
   }
 
   @override
   Future<Either<PostFailure, Unit>> likePost(UniqueId postId) {}
 
   @override
-  Future<Either<PostFailure, Unit>> publishPost(
-      User user, LocalImage image) async {
+  Future<Either<PostFailure, Unit>> publishPost(User user,
+      LocalImage image) async {
     final downloadUrl = await _uploadFileManager.uploadFile(image);
     final postId = Uuid().v4();
 
@@ -63,7 +68,9 @@ class PostFacadeDefaultImpl extends IPostFacade {
 
   @override
   Future<Either<PostFailure, Unit>> savePostLocally(LocalImage image) async {
-    ImageGallerySaver.saveFile(image.getOrCrash().path);
+    ImageGallerySaver.saveFile(image
+        .getOrCrash()
+        .path);
     return right(unit);
   }
 }

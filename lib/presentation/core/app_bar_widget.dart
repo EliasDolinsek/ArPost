@@ -8,7 +8,7 @@ class ContentContainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         const SizedBox(height: 32.0),
         ...children
@@ -22,12 +22,11 @@ class ContentContainerWidget extends StatelessWidget {
   }
 }
 
-class AppBarWidget extends StatelessWidget {
+class CustomAppBarWidget extends StatelessWidget {
   final String title;
-  final List<Widget> children;
+  final Widget child;
 
-  const AppBarWidget({Key key, @required this.title, this.children = const []})
-      : super(key: key);
+  const CustomAppBarWidget({Key key, this.title, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,23 @@ class AppBarWidget extends StatelessWidget {
         centerTitle: false,
         backgroundColor: Colors.white,
       ),
-      body: ContentContainerWidget(children: children),
+      body: child,
+    );
+  }
+}
+
+class AppBarWidget extends StatelessWidget {
+  final String title;
+  final List<Widget> children;
+
+  const AppBarWidget({Key key, @required this.title, this.children = const []})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomAppBarWidget(
+      title: title,
+      child: ContentContainerWidget(children: children),
     );
   }
 }
