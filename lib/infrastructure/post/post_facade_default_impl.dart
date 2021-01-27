@@ -47,11 +47,39 @@ class PostFacadeDefaultImpl extends IPostFacade {
   }
 
   @override
-  Future<Either<PostFailure, Unit>> likePost(UniqueId postId) {}
+  Future<Either<PostFailure, Post>> likePost(
+      UniqueId postId, UniqueId userId) async {
+    final post = await _getPostById(postId, userId);
+    Post updatedPost;
+
+    if (post.liked) {
+      updatedPost = post.copyWith(liked: false, likes: post.likes - 1);
+      updatedPost.likesList.remove(userId.getOrCrash());
+    } else {
+      updatedPost = post.copyWith(liked: true, likes: post.likes + 1);
+      updatedPost.likesList.add(userId.getOrCrash());
+    }
+
+    await _firebaseFirestore
+        .collection("posts")
+        .doc(postId.getOrCrash())
+        .update({"likes": post.likesList});
+
+    return right(updatedPost);
+  }
+
+  Future<Post> _getPostById(UniqueId postId, UniqueId userId) async {
+    final data = await _firebaseFirestore
+        .collection("posts")
+        .doc(postId.getOrCrash())
+        .get();
+
+    return data.toDomainPost(userId);
+  }
 
   @override
-  Future<Either<PostFailure, Unit>> publishPost(User user,
-      LocalImage image) async {
+  Future<Either<PostFailure, Unit>> publishPost(
+      User user, LocalImage image) async {
     final downloadUrl = await _uploadFileManager.uploadFile(image);
     final postId = Uuid().v4();
 
@@ -68,9 +96,7 @@ class PostFacadeDefaultImpl extends IPostFacade {
 
   @override
   Future<Either<PostFailure, Unit>> savePostLocally(LocalImage image) async {
-    ImageGallerySaver.saveFile(image
-        .getOrCrash()
-        .path);
+    ImageGallerySaver.saveFile(image.getOrCrash().path);
     return right(unit);
   }
 }

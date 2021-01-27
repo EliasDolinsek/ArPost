@@ -1,7 +1,10 @@
+import 'package:ar_post/app/auth/auth_bloc.dart';
+import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/domain/post/post.dart';
 import 'package:ar_post/presentation/core/content_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostWidget extends StatelessWidget {
   final Post post;
@@ -47,10 +50,7 @@ class PostWidget extends StatelessWidget {
   Widget _buildLikesWidget(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          _getLikeIcon(),
-          color: Theme.of(context).primaryColor,
-        ),
+        _buildLikeButton(),
         const SizedBox(width: 8.0),
         Text(
           post.likes.toString(),
@@ -60,6 +60,29 @@ class PostWidget extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLikeButton() {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return state.map(
+          initial: (_) => Container(),
+          authenticated: (value) {
+            return IconButton(
+              icon: Icon(
+                _getLikeIcon(),
+                color: Theme.of(context).primaryColor,
+              ),
+              onPressed: () {
+                context.read<PostsBloc>().add(PostsEvent.likePost(
+                    userId: value.user.id, postId: post.id));
+              },
+            );
+          },
+          unauthenticated: (_) => Container(),
+        );
+      },
     );
   }
 

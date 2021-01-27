@@ -11,6 +11,7 @@ abstract class Post with _$Post {
     @required String imageUrl,
     @required String userEmail,
     @required int likes,
-    @required bool liked
+    @required bool liked,
+    @required List<String> likesList,
   }) = _RemotePost;
 }

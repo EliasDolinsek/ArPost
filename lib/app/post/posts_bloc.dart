@@ -43,6 +43,32 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
           yield PostsState.userPostsLoaded(r);
         });
       },
+      likePost: (_LikePost value) async* {
+        final likedPost = await postFacade.likePost(value.postId, value.userId);
+        yield* state.map(
+          initial: (_) => null,
+          mostRecentPostsLoaded: (value) async* {
+            yield PostsState.mostRecentPostsLoaded(
+                updatePost(value.posts, likedPost.getOrElse(() => null)));
+          },
+          userPostsLoaded: (value) async* {
+            yield PostsState.userPostsLoaded(
+                updatePost(value.posts, likedPost.getOrElse(() => null)));
+          },
+          postsLoadingFailure: (_) => null,
+          loading: (_) => null,
+        );
+      },
     );
+  }
+
+  List<Post> updatePost(List<Post> posts, Post update) {
+    final updatedPosts = List<Post>.from(posts);
+    final index = updatedPosts.indexWhere((element) => element.id == update.id);
+
+    updatedPosts.removeAt(index);
+    updatedPosts.insert(index, update);
+
+    return updatedPosts;
   }
 }

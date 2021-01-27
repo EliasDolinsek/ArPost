@@ -7,4 +7,6 @@ abstract class PostsEvent with _$PostsEvent {
 
   const factory PostsEvent.loadUserPosts({@required UniqueId userId}) =
       _LoadUserPost;
+
+  const factory PostsEvent.likePost({@required UniqueId userId, @required UniqueId postId}) = _LikePost;
 }
