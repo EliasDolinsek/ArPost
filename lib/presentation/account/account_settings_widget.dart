@@ -13,7 +13,7 @@ class AccountSettingsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBarWidget(
+    return AppBarListWidget(
       title: "Account",
       children: [
         TitledContentWidget(

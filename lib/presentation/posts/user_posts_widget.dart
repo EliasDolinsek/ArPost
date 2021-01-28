@@ -17,7 +17,7 @@ class UserPostsWidget extends StatelessWidget {
       create: (context) => getIt<AuthBloc>(),
       child: BlocProvider(
         create: (context) => getIt<PostsBloc>(),
-        child: CustomAppBarWidget(
+        child: AppBarWidget(
           title: "Your Posts",
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
@@ -49,7 +49,7 @@ class UserPostsWidget extends StatelessWidget {
   }
 
   Widget _buildUserPostsLoaded(List<Post> posts) {
-    return ContentContainerWidget(
+    return SpacedListWidget(
       children: posts.map((e) => PostWidget(post: e)).toList(),
     );
   }

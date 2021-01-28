@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ContentContainerWidget extends StatelessWidget {
+class SpacedListWidget extends StatelessWidget {
   final List<Widget> children;
 
-  const ContentContainerWidget({Key key, this.children}) : super(key: key);
+  const SpacedListWidget({Key key, this.children}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,11 +22,11 @@ class ContentContainerWidget extends StatelessWidget {
   }
 }
 
-class CustomAppBarWidget extends StatelessWidget {
+class AppBarWidget extends StatelessWidget {
   final String title;
   final Widget child;
 
-  const CustomAppBarWidget({Key key, this.title, this.child}) : super(key: key);
+  const AppBarWidget({Key key, this.title, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,18 +48,18 @@ class CustomAppBarWidget extends StatelessWidget {
   }
 }
 
-class AppBarWidget extends StatelessWidget {
+class AppBarListWidget extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const AppBarWidget({Key key, @required this.title, this.children = const []})
+  const AppBarListWidget({Key key, @required this.title, this.children = const []})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBarWidget(
+    return AppBarWidget(
       title: title,
-      child: ContentContainerWidget(children: children),
+      child: SpacedListWidget(children: children),
     );
   }
 }
