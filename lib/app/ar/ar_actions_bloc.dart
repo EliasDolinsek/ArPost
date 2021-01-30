@@ -55,7 +55,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
         await postFacade.savePostLocally(state.image.getOrElse(() => null));
         yield state.copyWith(action: ArAction.published, image: none());
       },
-      notifyPublishedAcknowledged: (_NotifyPublishedAcknowledged value) async* {
+      notifyClose: (_NotifyClose value) async* {
         yield state.copyWith(action: ArAction.placed, image: none());
       },
       shareImage: (_ShareImage value) async* {

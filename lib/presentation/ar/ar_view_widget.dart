@@ -12,10 +12,12 @@ class ArViewWidget extends StatefulWidget {
 }
 
 class _ArViewWidgetState extends State<ArViewWidget> {
-  ScreenshotController screenshotController = ScreenshotController();
+  final screenshotController = ScreenshotController();
   ARKitController arkitController;
   ARKitPlaneAnchor lastAnchor;
   ARKitNode node;
+
+  final double _scaleSmoothing = 0.7;
 
   @override
   void dispose() {
@@ -41,12 +43,28 @@ class _ArViewWidgetState extends State<ArViewWidget> {
         controller: screenshotController,
         child: Container(
           color: Colors.white,
-          child: ARKitSceneView(
-            onARKitViewCreated: (arkitController) {
-              this.arkitController = arkitController;
-              this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
+          child: GestureDetector(
+            onScaleUpdate: (details) {
+              if (node != null) {
+                var resultScale = details.scale * node.scale.x;
+                if (resultScale < 1 && resultScale * _scaleSmoothing < 1) {
+                  resultScale *= 0.7;
+                } else if(resultScale >= 1 && resultScale >= 1){
+                  resultScale *= 0.7;
+                }
+
+                if (resultScale > 0.1 && resultScale < 6) {
+                  node.scale = vector_math.Vector3.all(resultScale);
+                }
+              }
             },
-            planeDetection: ARPlaneDetection.horizontal,
+            child: ARKitSceneView(
+              onARKitViewCreated: (arkitController) {
+                this.arkitController = arkitController;
+                this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
+              },
+              planeDetection: ARPlaneDetection.horizontal,
+            ),
           ),
         ),
       ),
@@ -83,9 +101,9 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   }
 
   Future _addPlane() async {
-    node = ARKitNode(
-      geometry: ARKitSphere(radius: 0.1),
+    node = ARKitReferenceNode(
       position: vector_math.Vector3.all(0),
+      url: "models.scnassets/dash.dae",
       name: "main",
     );
 

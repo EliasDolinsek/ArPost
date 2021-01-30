@@ -27,17 +27,21 @@ class ArWidget extends StatelessWidget {
     );
   }
 
-  void _showShareSheet(BuildContext context, LocalImage imageFile) {
+  void _showShareSheet(BuildContext context, LocalImage imageFile) async {
     final actionsBloc = context.read<ArActionsBloc>();
     final authBloc = context.read<AuthBloc>();
 
-    showModalBottomSheet(
+    final controller = showBottomSheet(
       context: context,
       builder: (context) {
-        return ShareImageSheetWidget(
-          localImage: imageFile,
-          actionsBloc: actionsBloc,
-          authBloc: authBloc,
+        return FractionallySizedBox(
+          alignment: Alignment.bottomCenter,
+          heightFactor: 0.7,
+          child: ShareImageSheetWidget(
+            localImage: imageFile,
+            actionsBloc: actionsBloc,
+            authBloc: authBloc,
+          ),
         );
       },
       shape: const RoundedRectangleBorder(
@@ -46,5 +50,8 @@ class ArWidget extends StatelessWidget {
         ),
       ),
     );
+
+    await controller.closed;
+    context.read<ArActionsBloc>().add(const ArActionsEvent.notifyClose());
   }
 }

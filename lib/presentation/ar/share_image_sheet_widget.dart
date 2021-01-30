@@ -65,7 +65,7 @@ class ShareImageSheetWidget extends StatelessWidget {
               onPressed: () {
                 context
                     .read<ArActionsBloc>()
-                    .add(const ArActionsEvent.notifyPublishedAcknowledged());
+                    .add(const ArActionsEvent.notifyClose());
                 Navigator.pop(context);
               },
             ),

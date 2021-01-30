@@ -20,6 +20,6 @@ abstract class ArActionsEvent with _$ArActionsEvent {
   const factory ArActionsEvent.shareImage({@required User user}) =
       _ShareImage;
 
-  const factory ArActionsEvent.notifyPublishedAcknowledged() =
-      _NotifyPublishedAcknowledged;
+  const factory ArActionsEvent.notifyClose() =
+      _NotifyClose;
 }
