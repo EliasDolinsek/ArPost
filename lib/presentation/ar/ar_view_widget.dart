@@ -44,6 +44,9 @@ class _ArViewWidgetState extends State<ArViewWidget> {
         child: Container(
           color: Colors.white,
           child: GestureDetector(
+            onLongPress: (){
+
+            },
             onScaleUpdate: (details) {
               if (node != null) {
                 var resultScale = details.scale * node.scale.x;
@@ -103,7 +106,7 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Future _addPlane() async {
     node = ARKitReferenceNode(
       position: vector_math.Vector3.all(0),
-      url: "models.scnassets/dash.dae",
+      url: "models.scnassets/hello_world.dae",
       name: "main",
     );
 
