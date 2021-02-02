@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:ar_post/app/auth/auth_bloc.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
@@ -27,7 +25,7 @@ class ArWidget extends StatelessWidget {
     );
   }
 
-  void _showShareSheet(BuildContext context, LocalImage imageFile) async {
+  Future _showShareSheet(BuildContext context, LocalImage imageFile) async {
     final actionsBloc = context.read<ArActionsBloc>();
     final authBloc = context.read<AuthBloc>();
 
@@ -52,6 +50,6 @@ class ArWidget extends StatelessWidget {
     );
 
     await controller.closed;
-    context.read<ArActionsBloc>().add(const ArActionsEvent.notifyClose());
+    context.read<ArActionsBloc>().add(const ArActionsEvent.backToPlaced());
   }
 }

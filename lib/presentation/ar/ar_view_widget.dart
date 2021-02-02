@@ -43,35 +43,56 @@ class _ArViewWidgetState extends State<ArViewWidget> {
         controller: screenshotController,
         child: Container(
           color: Colors.white,
-          child: GestureDetector(
-            onLongPress: (){
-
+          child: BlocBuilder<ArActionsBloc, ArActionsState>(
+            builder: (context, state) {
+              return GestureDetector(
+                onHorizontalDragUpdate: state.action == ArAction.moving
+                    ? onHorizontalDragUpdate
+                    : null,
+                onScaleUpdate:
+                state.action == ArAction.moving ? onScaleUpdate : null,
+                child: ARKitSceneView(
+                  onARKitViewCreated: (arkitController) {
+                    this.arkitController = arkitController;
+                    this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
+                  },
+                  planeDetection: ARPlaneDetection.horizontal,
+                ),
+              );
             },
-            onScaleUpdate: (details) {
-              if (node != null) {
-                var resultScale = details.scale * node.scale.x;
-                if (resultScale < 1 && resultScale * _scaleSmoothing < 1) {
-                  resultScale *= 0.7;
-                } else if(resultScale >= 1 && resultScale >= 1){
-                  resultScale *= 0.7;
-                }
-
-                if (resultScale > 0.1 && resultScale < 6) {
-                  node.scale = vector_math.Vector3.all(resultScale);
-                }
-              }
-            },
-            child: ARKitSceneView(
-              onARKitViewCreated: (arkitController) {
-                this.arkitController = arkitController;
-                this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
-              },
-              planeDetection: ARPlaneDetection.horizontal,
-            ),
           ),
         ),
       ),
     );
+  }
+
+  void onHorizontalDragUpdate(DragUpdateDetails details) {
+    if (node != null) {
+      final resultX =
+          (1 + details.delta.distance) * (node.position.x + 0.00001);
+      if (resultX > -10 && resultX < 10) {
+        node.position = vector_math.Vector3(
+          resultX,
+          node.position.y,
+          node.position.z,
+        );
+      }
+    }
+  }
+
+  void onScaleUpdate(ScaleUpdateDetails details) {
+    if (node != null) {
+      var resultScale = details.scale * node.scale.x;
+      if (resultScale < 1 && resultScale * _scaleSmoothing < 1) {
+        resultScale *= 0.7;
+      } else if (resultScale >= 1 && resultScale >= 1) {
+        resultScale *= 0.7;
+      }
+
+      if (resultScale > 0.1 && resultScale < 6) {
+        node.scale = vector_math.Vector3.all(resultScale);
+      }
+    }
   }
 
   void _release() {
@@ -83,7 +104,10 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Future _handleAddAnchor(ARKitAnchor anchor) async {
     if (anchor is ARKitPlaneAnchor) {
       lastAnchor = anchor;
-      if (context.read<ArActionsBloc>().state.action == ArAction.placing &&
+      if (context
+          .read<ArActionsBloc>()
+          .state
+          .action == ArAction.placing &&
           node == null) {
         if (await _tryAddPlane()) {
           context

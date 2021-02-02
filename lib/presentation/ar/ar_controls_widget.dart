@@ -18,7 +18,9 @@ class ArControlsWidget extends StatelessWidget {
             } else if (state.action == ArAction.placing) {
               return _buildLoading();
             } else if (state.action == ArAction.placed) {
-              return _buildPlacedOrCaptured(context);
+              return _buildPlacedCapturedOrMoving(context, false);
+            } else if (state.action == ArAction.moving) {
+              return _buildPlacedCapturedOrMoving(context, true);
             } else if (state.action == ArAction.capturing) {
               return Container();
             } else {
@@ -42,20 +44,26 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlacedOrCaptured(BuildContext context) {
+  Widget _buildPlacedCapturedOrMoving(BuildContext context, bool moving) {
     return Stack(
-      children: [_buildCapture(context), _buildReleaseButton(context)],
+      children: [
+        _buildMove(context, moving),
+        _buildCapture(context, moving),
+        _buildReleaseButton(context, moving)
+      ],
     );
   }
 
-  Widget _buildCapture(BuildContext context) {
+  Widget _buildCapture(BuildContext context, bool disabled) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: ArButton(
         iconData: Icons.fiber_manual_record,
-        onPressed: () {
-          context.read<ArActionsBloc>().add(const ArActionsEvent.capture());
-        },
+        onPressed: disabled
+            ? null
+            : () => context
+                .read<ArActionsBloc>()
+                .add(const ArActionsEvent.capture()),
       ),
     );
   }
@@ -67,7 +75,7 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildReleaseButton(BuildContext context) {
+  Widget _buildReleaseButton(BuildContext context, bool disabled) {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
@@ -79,14 +87,72 @@ class ArControlsWidget extends StatelessWidget {
           icon: Icon(
             Icons.close,
             size: 36,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: disabled
+                ? Theme.of(context).primaryColor.withOpacity(0.5)
+                : Theme.of(context).primaryColor,
           ),
-          onPressed: () {
-            context.read<ArActionsBloc>().add(const ArActionsEvent.release());
-          },
+          onPressed: disabled
+              ? null
+              : () => context
+                  .read<ArActionsBloc>()
+                  .add(const ArActionsEvent.release()),
         ),
+      ),
+    );
+  }
+
+  Widget _buildMove(BuildContext context, bool movingActive) {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          bottom: 29.0,
+          left: 55.0,
+        ),
+        child: movingActive
+            ? _buildActiveMoveButton(context)
+            : _buildMoveButton(context, false),
+      ),
+    );
+  }
+
+  Widget _buildActiveMoveButton(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildMoveButton(context, true),
+        const SizedBox(height: 4),
+        _buildActiveMoveCircle(context)
+      ],
+    );
+  }
+
+  Widget _buildMoveButton(BuildContext context, bool active) {
+    return IconButton(
+      icon: Icon(
+        Icons.open_with,
+        size: 36,
+        color: Theme.of(context).primaryColor,
+      ),
+      onPressed: () {
+        if (active) {
+          context
+              .read<ArActionsBloc>()
+              .add(const ArActionsEvent.backToPlaced());
+        } else {
+          context.read<ArActionsBloc>().add(const ArActionsEvent.move());
+        }
+      },
+    );
+  }
+
+  Widget _buildActiveMoveCircle(BuildContext context) {
+    return Container(
+      width: 10,
+      height: 10,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Theme.of(context).primaryColor,
       ),
     );
   }

@@ -17,6 +17,7 @@ enum ArAction {
   idle,
   placing,
   placed,
+  moving,
   capturing,
   captured,
   publishing,

@@ -17,7 +17,12 @@ class ArButton extends StatelessWidget {
         SizedBox(
           width: 94,
           height: 94,
-          child: CustomPaint(painter: CirclePaint(context)),
+          child: CustomPaint(
+            painter: CirclePaint(
+              context,
+              disabled: onPressed == null,
+            ),
+          ),
         ),
         SizedBox(
           width: 92,
@@ -27,7 +32,9 @@ class ArButton extends StatelessWidget {
               child: Icon(
                 iconData,
                 size: 38,
-                color: Theme.of(context).primaryColor,
+                color: onPressed == null
+                    ? Theme.of(context).primaryColor.withOpacity(0.5)
+                    : Theme.of(context).primaryColor,
               ),
             ),
             onPressed: onPressed,
@@ -40,13 +47,16 @@ class ArButton extends StatelessWidget {
 
 class CirclePaint extends CustomPainter {
   final BuildContext context;
+  final bool disabled;
 
-  CirclePaint(this.context);
+  CirclePaint(this.context, {this.disabled = true});
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Theme.of(context).primaryColor
+      ..color = disabled
+          ? Theme.of(context).primaryColor.withOpacity(0.5)
+          : Theme.of(context).primaryColor
       ..strokeWidth = 10
       ..style = PaintingStyle.stroke;
 
