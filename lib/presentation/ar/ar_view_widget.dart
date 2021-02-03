@@ -17,7 +17,7 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   ARKitPlaneAnchor lastAnchor;
   ARKitNode node;
 
-  final double _scaleSmoothing = 0.7;
+  double dx = 0, dy = 0, scale = 1;
 
   @override
   void dispose() {
@@ -50,7 +50,10 @@ class _ArViewWidgetState extends State<ArViewWidget> {
                     ? onHorizontalDragUpdate
                     : null,
                 onScaleUpdate:
-                state.action == ArAction.moving ? onScaleUpdate : null,
+                    state.action != ArAction.moving ? onScaleUpdate : null,
+                onVerticalDragUpdate: state.action == ArAction.moving
+                    ? onVerticalDragUpdate
+                    : null,
                 child: ARKitSceneView(
                   onARKitViewCreated: (arkitController) {
                     this.arkitController = arkitController;
@@ -68,12 +71,26 @@ class _ArViewWidgetState extends State<ArViewWidget> {
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {
     if (node != null) {
-      final resultX =
-          (1 + details.delta.distance) * (node.position.x + 0.00001);
-      if (resultX > -10 && resultX < 10) {
+      final result = details.delta.dx / 16 + dx;
+      if (result < 10 && result > -10) {
+        dx = result;
         node.position = vector_math.Vector3(
-          resultX,
+          result,
           node.position.y,
+          node.position.z,
+        );
+      }
+    }
+  }
+
+  void onVerticalDragUpdate(DragUpdateDetails details) {
+    if (node != null) {
+      final result = -details.delta.dy / 16 + dy;
+      if (result < 10 && result > -10) {
+        dy = result;
+        node.position = vector_math.Vector3(
+          node.position.x,
+          result,
           node.position.z,
         );
       }
@@ -82,15 +99,14 @@ class _ArViewWidgetState extends State<ArViewWidget> {
 
   void onScaleUpdate(ScaleUpdateDetails details) {
     if (node != null) {
-      var resultScale = details.scale * node.scale.x;
-      if (resultScale < 1 && resultScale * _scaleSmoothing < 1) {
-        resultScale *= 0.7;
-      } else if (resultScale >= 1 && resultScale >= 1) {
-        resultScale *= 0.7;
-      }
+      final convertedScale = details.horizontalScale < 1
+          ? -details.horizontalScale
+          : details.horizontalScale;
 
-      if (resultScale > 0.1 && resultScale < 6) {
-        node.scale = vector_math.Vector3.all(resultScale);
+      final result = convertedScale / 16 + scale;
+      if (result < 5 && result > 0.1) {
+        scale = result;
+        node.scale = vector_math.Vector3.all(scale);
       }
     }
   }
@@ -104,10 +120,7 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Future _handleAddAnchor(ARKitAnchor anchor) async {
     if (anchor is ARKitPlaneAnchor) {
       lastAnchor = anchor;
-      if (context
-          .read<ArActionsBloc>()
-          .state
-          .action == ArAction.placing &&
+      if (context.read<ArActionsBloc>().state.action == ArAction.placing &&
           node == null) {
         if (await _tryAddPlane()) {
           context
