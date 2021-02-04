@@ -29,7 +29,7 @@ class PostFacadeDefaultImpl extends IPostFacade {
       UniqueId userId) async {
     final posts = await _firebaseFirestore
         .collection("posts")
-        .orderBy("releaseDate")
+        .orderBy("releaseDate", descending: true)
         .get();
 
     return right(posts.docs.map((e) => e.toDomainPost(userId)).toList());
