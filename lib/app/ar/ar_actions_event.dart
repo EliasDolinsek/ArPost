@@ -17,11 +17,14 @@ abstract class ArActionsEvent with _$ArActionsEvent {
 
   const factory ArActionsEvent.move() = _Move;
 
+  const factory ArActionsEvent.turn({@required TurnDirection direction}) =
+      _Turn;
+
   const factory ArActionsEvent.saveImageToGallery() = _ImageSaveToGallery;
 
-  const factory ArActionsEvent.shareImage({@required User user}) =
-      _ShareImage;
+  const factory ArActionsEvent.shareImage({@required User user}) = _ShareImage;
 
-  const factory ArActionsEvent.backToPlaced() =
-      _NotifyClose;
+  const factory ArActionsEvent.backToPlaced() = _NotifyClose;
 }
+
+enum TurnDirection { left, right }

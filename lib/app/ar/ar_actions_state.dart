@@ -5,12 +5,11 @@ abstract class ArActionsState with _$ArActionsState {
   const factory ArActionsState({
     @required ArAction action,
     @required Option<LocalImage> image,
+    @required Option<TurnDirection> direction,
   }) = _ArActionsState;
 
-  factory ArActionsState.initial() => ArActionsState(
-        action: ArAction.idle,
-        image: none(),
-      );
+  factory ArActionsState.initial() =>
+      ArActionsState(action: ArAction.idle, image: none(), direction: none());
 }
 
 enum ArAction {

@@ -18,9 +18,9 @@ class ArControlsWidget extends StatelessWidget {
             } else if (state.action == ArAction.placing) {
               return _buildLoading();
             } else if (state.action == ArAction.placed) {
-              return _buildPlacedCapturedOrMoving(context, false);
+              return _buildPlacedOrCaptured(context);
             } else if (state.action == ArAction.moving) {
-              return _buildPlacedCapturedOrMoving(context, true);
+              return _buildMoving(context);
             } else if (state.action == ArAction.capturing) {
               return Container();
             } else {
@@ -44,26 +44,33 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPlacedCapturedOrMoving(BuildContext context, bool moving) {
+  Widget _buildPlacedOrCaptured(BuildContext context) {
     return Stack(
       children: [
-        _buildMove(context, moving),
-        _buildCapture(context, moving),
-        _buildReleaseButton(context, moving)
+        _buildMove(context, false),
+        _buildCapture(context),
+        _buildReleaseButton(context)
       ],
     );
   }
 
-  Widget _buildCapture(BuildContext context, bool disabled) {
+  Widget _buildMoving(BuildContext context) {
+    return Stack(
+      children: [
+        _buildMove(context, true),
+        _buildTurnLeft(context),
+        _buildTurnRight(context)
+      ],
+    );
+  }
+
+  Widget _buildCapture(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: ArButton(
         iconData: Icons.fiber_manual_record,
-        onPressed: disabled
-            ? null
-            : () => context
-                .read<ArActionsBloc>()
-                .add(const ArActionsEvent.capture()),
+        onPressed: () =>
+            context.read<ArActionsBloc>().add(const ArActionsEvent.capture()),
       ),
     );
   }
@@ -75,7 +82,7 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildReleaseButton(BuildContext context, bool disabled) {
+  Widget _buildReleaseButton(BuildContext context) {
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
@@ -87,15 +94,48 @@ class ArControlsWidget extends StatelessWidget {
           icon: Icon(
             Icons.close,
             size: 36,
-            color: disabled
-                ? Theme.of(context).primaryColor.withOpacity(0.5)
-                : Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColor,
           ),
-          onPressed: disabled
-              ? null
-              : () => context
-                  .read<ArActionsBloc>()
-                  .add(const ArActionsEvent.release()),
+          onPressed: () =>
+              context.read<ArActionsBloc>().add(const ArActionsEvent.release()),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTurnLeft(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 29.0),
+        child: IconButton(
+          icon: Icon(
+            Icons.keyboard_arrow_left_rounded,
+            color: Theme.of(context).primaryColor,
+          ),
+          iconSize: 36,
+          onPressed: () => context
+            .read<ArActionsBloc>()
+            .add(const ArActionsEvent.turn(direction: TurnDirection.left)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTurnRight(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 29.0, right: 55),
+        child: IconButton(
+          icon: Icon(
+            Icons.keyboard_arrow_right_rounded,
+            color: Theme.of(context).primaryColor,
+          ),
+          iconSize: 36,
+          onPressed: () => context
+              .read<ArActionsBloc>()
+              .add(const ArActionsEvent.turn(direction: TurnDirection.right)),
         ),
       ),
     );

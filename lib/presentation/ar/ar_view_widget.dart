@@ -37,6 +37,9 @@ class _ArViewWidgetState extends State<ArViewWidget> {
           }
         } else if (state.action == ArAction.releasing) {
           _release();
+        } else if (state.action == ArAction.moving &&
+            state.direction.isSome()) {
+          _turn(state.direction.getOrElse(() => null));
         }
       },
       child: Screenshot(
@@ -148,5 +151,11 @@ class _ArViewWidgetState extends State<ArViewWidget> {
     );
 
     await arkitController.add(node, parentNodeName: lastAnchor.nodeName);
+  }
+
+  void _turn(TurnDirection direction) {
+    if (node != null) {
+      //node.rotation = vector_math.Matrix3(100, 100, 100, 000, 000, 000, 000, 000, 000);
+    }
   }
 }

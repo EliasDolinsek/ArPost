@@ -24,9 +24,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
   ArActionsBloc(this.postFacade) : super(ArActionsState.initial());
 
   @override
-  Stream<ArActionsState> mapEventToState(
-    ArActionsEvent event,
-  ) async* {
+  Stream<ArActionsState> mapEventToState(ArActionsEvent event,) async* {
     yield* event.map(
       place: (_Place value) async* {
         yield state.copyWith(action: ArAction.placing);
@@ -66,6 +64,9 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       },
       move: (_Move value) async* {
         yield state.copyWith(action: ArAction.moving);
+      },
+      turn: (_Turn value) async* {
+        yield state.copyWith(direction: some(value.direction));
       },
     );
   }
