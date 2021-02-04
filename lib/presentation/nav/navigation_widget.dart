@@ -45,28 +45,35 @@ class _NavigationWidgetState extends State<NavigationWidget>
   }
 
   Widget _buildNavbar() {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.dashboard_rounded),
-          label: 'FEED',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.camera),
-          label: 'AR',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'ACCOUNT',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Theme.of(context).primaryColor,
-      onTap: _onItemTapped,
+    return Builder(
+      builder: (context) {
+        return BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.dashboard_rounded),
+              label: 'FEED',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera),
+              label: 'AR',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'ACCOUNT',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).primaryColor,
+          onTap: (index) => _onItemTapped(index, context.read<ArActionsBloc>()),
+        );
+      },
     );
   }
 
-  void _onItemTapped(int index) {
+  void _onItemTapped(int index, ArActionsBloc bloc) {
+    if (index != 1) {
+      bloc.add(const ArActionsEvent.notifyDisposed());
+    }
     setState(() {
       _selectedIndex = index;
     });

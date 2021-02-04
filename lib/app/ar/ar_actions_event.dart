@@ -25,6 +25,8 @@ abstract class ArActionsEvent with _$ArActionsEvent {
   const factory ArActionsEvent.shareImage({@required User user}) = _ShareImage;
 
   const factory ArActionsEvent.backToPlaced() = _NotifyClose;
+
+  const factory ArActionsEvent.notifyDisposed() = _NotifyDisposed;
 }
 
 enum TurnDirection { left, right }

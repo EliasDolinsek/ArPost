@@ -17,14 +17,14 @@ part 'ar_actions_state.dart';
 
 part 'ar_actions_bloc.freezed.dart';
 
-@injectable
+@Singleton()
 class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
   final IPostFacade postFacade;
 
   ArActionsBloc(this.postFacade) : super(ArActionsState.initial());
 
   @override
-  Stream<ArActionsState> mapEventToState(ArActionsEvent event,) async* {
+  Stream<ArActionsState> mapEventToState(ArActionsEvent event) async* {
     yield* event.map(
       place: (_Place value) async* {
         yield state.copyWith(action: ArAction.placing);
@@ -67,6 +67,9 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       },
       turn: (_Turn value) async* {
         yield state.copyWith(direction: some(value.direction));
+      },
+      notifyDisposed: (_NotifyDisposed value) async* {
+        yield ArActionsState.initial();
       },
     );
   }

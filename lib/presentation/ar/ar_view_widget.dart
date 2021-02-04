@@ -19,6 +19,7 @@ class _ArViewWidgetState extends State<ArViewWidget> {
 
   double dx = 0, dy = 0, scale = 1;
 
+
   @override
   void dispose() {
     arkitController?.dispose();
