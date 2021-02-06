@@ -26,20 +26,28 @@ class FeedWidget extends StatelessWidget {
   Widget _buildFeed(BuildContext context, UniqueId userId) {
     return BlocBuilder<PostsBloc, PostsState>(
       builder: (context, state) {
-        print(state);
         return state.map(
           initial: (_) => _buildLoadingAndRequestPosts(context, userId),
           mostRecentPostsLoaded: (value) {
             return RefreshIndicator(
               onRefresh: () async {
-                context
-                    .read<PostsBloc>()
-                    .add(PostsEvent.loadMostRecentPosts(userId: userId));
+                context.read<PostsBloc>().add(PostsEvent.load(userId: userId));
               },
               child: ListView.separated(
                 itemCount: value.posts.length,
                 itemBuilder: (context, index) {
-                  return PostWidget(post: value.posts[index]);
+                  final post = value.posts[index];
+                  return PostWidget(
+                    post: post,
+                    onLike: () {
+                      context.read<PostsBloc>().add(
+                            PostsEvent.likePost(
+                              postId: post.id,
+                              userId: userId,
+                            ),
+                          );
+                    },
+                  );
                 },
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 32.0),
@@ -57,7 +65,7 @@ class FeedWidget extends StatelessWidget {
 
   Widget _buildLoadingAndRequestPosts(BuildContext context, UniqueId userId) {
     final postsBloc = BlocProvider.of<PostsBloc>(context);
-    postsBloc.add(PostsEvent.loadMostRecentPosts(userId: userId));
+    postsBloc.add(PostsEvent.load(userId: userId));
     return _buildLoading();
   }
 

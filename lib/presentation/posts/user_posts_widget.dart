@@ -1,4 +1,5 @@
 import 'package:ar_post/app/auth/auth_bloc.dart';
+import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/app/user_posts/user_posts_bloc.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/domain/post/post.dart';
@@ -39,16 +40,25 @@ class UserPostsWidget extends StatelessWidget {
           failure: (_) => _buildError(),
           initial: (_) => _buildLoadingAndRequestPosts(context, userId),
           loaded: (LoadedUserPostsState value) =>
-              _buildUserPostsLoaded(value.posts),
+              _buildUserPostsLoaded(value.posts, context),
           loading: (_) => _buildLoading(),
         );
       },
     );
   }
 
-  Widget _buildUserPostsLoaded(List<Post> posts) {
+  Widget _buildUserPostsLoaded(List<Post> posts, BuildContext context) {
     return SpacedListWidget(
-      children: posts.map((e) => PostWidget(post: e, deletable: true)).toList(),
+      children: posts
+          .map((e) => PostWidget(
+                post: e,
+                onDelete: () {
+                  context
+                      .read<UserPostsBloc>()
+                      .add(UserPostsEvent.deletePost(postId: e.id));
+                },
+              ))
+          .toList(),
     );
   }
 

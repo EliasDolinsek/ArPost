@@ -25,24 +25,6 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     PostsEvent event,
   ) async* {
     yield* event.map(
-      loadMostRecentPosts: (value) async* {
-        yield const PostsState.loading();
-        final posts = await postFacade.fetchMostRecentPosts(value.userId);
-        yield* posts.fold((l) async* {
-          yield const PostsState.postsLoadingFailure();
-        }, (r) async* {
-          yield PostsState.mostRecentPostsLoaded(r);
-        });
-      },
-      loadUserPosts: (_LoadUserPost value) async* {
-        yield const PostsState.loading();
-        final posts = await postFacade.fetchUserPosts(value.userId);
-        yield* posts.fold((l) async* {
-          yield const PostsState.postsLoadingFailure();
-        }, (r) async* {
-          yield PostsState.userPostsLoaded(r);
-        });
-      },
       likePost: (_LikePost value) async* {
         final likedPost = await postFacade.likePost(value.postId, value.userId);
         yield* state.map(
@@ -59,27 +41,16 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
           loading: (_) => null,
         );
       },
-      deletePost: (_DeletePost event) async* {
-        await postFacade.deletePost(event.postId);
-        yield* state.map(
-          initial: (_) => null,
-          mostRecentPostsLoaded: (value) async* {
-            yield PostsState.mostRecentPostsLoaded(
-                removePost(value.posts, event.postId));
-          },
-          userPostsLoaded: (value) async* {
-            yield PostsState.userPostsLoaded(
-                removePost(value.posts, event.postId));
-          },
-          postsLoadingFailure: (_) => null,
-          loading: (_) => null,
-        );
+      load: (_LoadMostRecentPosts value) async* {
+        yield const PostsState.loading();
+        final posts = await postFacade.fetchMostRecentPosts(value.userId);
+        yield* posts.fold((l) async* {
+          yield const PostsState.postsLoadingFailure();
+        }, (r) async* {
+          yield PostsState.mostRecentPostsLoaded(r);
+        });
       },
     );
-  }
-
-  List<Post> removePost(List<Post> posts, UniqueId postId) {
-    return List<Post>.from(posts)..removeWhere((p) => p.id == postId);
   }
 
   List<Post> updatePost(List<Post> posts, Post update) {

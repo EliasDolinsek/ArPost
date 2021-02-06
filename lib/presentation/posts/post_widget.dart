@@ -1,18 +1,18 @@
-import 'package:ar_post/app/ar/ar_actions_bloc.dart';
-import 'package:ar_post/app/auth/auth_bloc.dart';
-import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/domain/post/post.dart';
 import 'package:ar_post/presentation/core/content_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostWidget extends StatelessWidget {
   final Post post;
-  final bool deletable;
+  final Function onDelete, onLike;
 
-  const PostWidget({Key key, this.post, this.deletable = false})
-      : super(key: key);
+  const PostWidget({
+    Key key,
+    this.post,
+    this.onDelete,
+    this.onLike,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +41,14 @@ class PostWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(child: Container()),
-                _buildLikesWidget(context),
-                if (deletable)
+                if (onLike != null) _buildLikesWidget(context),
+                if (onDelete != null)
                   IconButton(
                     icon: const Icon(
                       Icons.delete,
                       color: Colors.red,
                     ),
-                    onPressed: () => context
-                        .read<PostsBloc>()
-                        .add(PostsEvent.deletePost(postId: post.id)),
+                    onPressed: () => onDelete(),
                   )
               ],
             ),
@@ -63,7 +61,7 @@ class PostWidget extends StatelessWidget {
   Widget _buildLikesWidget(BuildContext context) {
     return Row(
       children: [
-        _buildLikeButton(),
+        _buildLikeButton(context),
         const SizedBox(width: 8.0),
         Text(
           post.likes.toString(),
@@ -76,26 +74,13 @@ class PostWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLikeButton() {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (context, state) {
-        return state.map(
-          initial: (_) => Container(),
-          authenticated: (value) {
-            return IconButton(
-              icon: Icon(
-                _getLikeIcon(),
-                color: Theme.of(context).primaryColor,
-              ),
-              onPressed: () {
-                context.read<PostsBloc>().add(PostsEvent.likePost(
-                    userId: value.user.id, postId: post.id));
-              },
-            );
-          },
-          unauthenticated: (_) => Container(),
-        );
-      },
+  Widget _buildLikeButton(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        _getLikeIcon(),
+        color: Theme.of(context).primaryColor,
+      ),
+      onPressed: () => onLike(),
     );
   }
 
