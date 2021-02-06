@@ -59,7 +59,27 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
           loading: (_) => null,
         );
       },
+      deletePost: (_DeletePost event) async* {
+        await postFacade.deletePost(event.postId);
+        yield* state.map(
+          initial: (_) => null,
+          mostRecentPostsLoaded: (value) async* {
+            yield PostsState.mostRecentPostsLoaded(
+                removePost(value.posts, event.postId));
+          },
+          userPostsLoaded: (value) async* {
+            yield PostsState.userPostsLoaded(
+                removePost(value.posts, event.postId));
+          },
+          postsLoadingFailure: (_) => null,
+          loading: (_) => null,
+        );
+      },
     );
+  }
+
+  List<Post> removePost(List<Post> posts, UniqueId postId) {
+    return List<Post>.from(posts)..removeWhere((p) => p.id == postId);
   }
 
   List<Post> updatePost(List<Post> posts, Post update) {

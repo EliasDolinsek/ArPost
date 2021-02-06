@@ -50,7 +50,7 @@ class UserPostsWidget extends StatelessWidget {
 
   Widget _buildUserPostsLoaded(List<Post> posts) {
     return SpacedListWidget(
-      children: posts.map((e) => PostWidget(post: e)).toList(),
+      children: posts.map((e) => PostWidget(post: e, deletable: true)).toList(),
     );
   }
 

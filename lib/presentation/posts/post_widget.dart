@@ -1,3 +1,4 @@
+import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:ar_post/app/auth/auth_bloc.dart';
 import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/domain/post/post.dart';
@@ -8,8 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostWidget extends StatelessWidget {
   final Post post;
+  final bool deletable;
 
-  const PostWidget({Key key, this.post}) : super(key: key);
+  const PostWidget({Key key, this.post, this.deletable = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,6 @@ class PostWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   post.userEmail,
@@ -38,7 +40,18 @@ class PostWidget extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
+                Expanded(child: Container()),
                 _buildLikesWidget(context),
+                if (deletable)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () => context
+                        .read<PostsBloc>()
+                        .add(PostsEvent.deletePost(postId: post.id)),
+                  )
               ],
             ),
           )

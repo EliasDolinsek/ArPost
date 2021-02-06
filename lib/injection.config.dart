@@ -45,11 +45,11 @@ GetIt $initGetIt(
       () => FirestoreUploadFileManager(get<FirebaseStorage>()));
   gh.lazySingleton<IPostFacade>(() => PostFacadeDefaultImpl(
       get<FirebaseFirestore>(), get<UploadFileManager>()));
-  gh.factory<ArActionsBloc>(() => ArActionsBloc(get<IPostFacade>()));
 
   // Eager singletons must be registered in the right order
   gh.singleton<AuthBloc>(AuthBloc(get<IAuthFacade>()));
   gh.singleton<PostsBloc>(PostsBloc(get<IPostFacade>()));
+  gh.singleton<ArActionsBloc>(ArActionsBloc(get<IPostFacade>()));
   return get;
 }
 

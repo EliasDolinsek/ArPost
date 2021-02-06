@@ -41,7 +41,6 @@ class PostFacadeDefaultImpl extends IPostFacade {
     final posts = await _firebaseFirestore
         .collection("posts")
         .where("userId", isEqualTo: userId.getOrCrash())
-        .orderBy("releaseDate", descending: true)
         .get();
 
     return right(posts.docs.map((e) => e.toDomainPost(userId)).toList());
