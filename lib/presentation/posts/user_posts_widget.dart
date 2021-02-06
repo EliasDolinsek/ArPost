@@ -1,5 +1,5 @@
 import 'package:ar_post/app/auth/auth_bloc.dart';
-import 'package:ar_post/app/post/posts_bloc.dart';
+import 'package:ar_post/app/user_posts/user_posts_bloc.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/domain/post/post.dart';
 import 'package:ar_post/injection.dart';
@@ -10,13 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserPostsWidget extends StatelessWidget {
   const UserPostsWidget();
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<AuthBloc>(),
       child: BlocProvider(
-        create: (context) => getIt<PostsBloc>(),
+        create: (context) => getIt<UserPostsBloc>(),
         child: AppBarWidget(
           title: "Your Posts",
           child: BlocBuilder<AuthBloc, AuthState>(
@@ -34,14 +33,13 @@ class UserPostsWidget extends StatelessWidget {
   }
 
   Widget _buildUserPosts(UniqueId userId) {
-    return BlocBuilder<PostsBloc, PostsState>(
+    return BlocBuilder<UserPostsBloc, UserPostsState>(
       builder: (context, state) {
         return state.map(
+          failure: (_) => _buildError(),
           initial: (_) => _buildLoadingAndRequestPosts(context, userId),
-          mostRecentPostsLoaded: (_) =>
-              _buildLoadingAndRequestPosts(context, userId),
-          userPostsLoaded: (value) => _buildUserPostsLoaded(value.posts),
-          postsLoadingFailure: (_) => _buildError(),
+          loaded: (LoadedUserPostsState value) =>
+              _buildUserPostsLoaded(value.posts),
           loading: (_) => _buildLoading(),
         );
       },
@@ -55,8 +53,8 @@ class UserPostsWidget extends StatelessWidget {
   }
 
   Widget _buildLoadingAndRequestPosts(BuildContext context, UniqueId userId) {
-    final postsBloc = BlocProvider.of<PostsBloc>(context);
-    postsBloc.add(PostsEvent.loadUserPosts(userId: userId));
+    final postsBloc = BlocProvider.of<UserPostsBloc>(context);
+    postsBloc.add(UserPostsEvent.load(userId: userId));
     return _buildLoading();
   }
 

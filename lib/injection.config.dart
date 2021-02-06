@@ -21,6 +21,7 @@ import 'infrastructure/post/post_facade_default_impl.dart';
 import 'app/post/posts_bloc.dart';
 import 'app/auth/sign_in_form/sign_in_form_bloc.dart';
 import 'infrastructure/post/upload_file_manager.dart';
+import 'app/user_posts/user_posts_bloc.dart';
 
 /// adds generated dependencies
 /// to the provided [GetIt] instance
@@ -45,6 +46,7 @@ GetIt $initGetIt(
       () => FirestoreUploadFileManager(get<FirebaseStorage>()));
   gh.lazySingleton<IPostFacade>(() => PostFacadeDefaultImpl(
       get<FirebaseFirestore>(), get<UploadFileManager>()));
+  gh.factory<UserPostsBloc>(() => UserPostsBloc(get<IPostFacade>()));
 
   // Eager singletons must be registered in the right order
   gh.singleton<AuthBloc>(AuthBloc(get<IAuthFacade>()));

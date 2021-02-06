@@ -43,7 +43,7 @@ class AccountSettingsWidget extends StatelessWidget {
                 title: const Text("Your Posts"),
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const UserPostsWidget(),
+                    builder: (_) => const UserPostsWidget(),
                   ));
                 },
               ),

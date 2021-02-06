@@ -26,6 +26,7 @@ class FeedWidget extends StatelessWidget {
   Widget _buildFeed(BuildContext context, UniqueId userId) {
     return BlocBuilder<PostsBloc, PostsState>(
       builder: (context, state) {
+        print(state);
         return state.map(
           initial: (_) => _buildLoadingAndRequestPosts(context, userId),
           mostRecentPostsLoaded: (value) {
@@ -54,8 +55,7 @@ class FeedWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLoadingAndRequestPosts(
-      BuildContext context, UniqueId userId) {
+  Widget _buildLoadingAndRequestPosts(BuildContext context, UniqueId userId) {
     final postsBloc = BlocProvider.of<PostsBloc>(context);
     postsBloc.add(PostsEvent.loadMostRecentPosts(userId: userId));
     return _buildLoading();
