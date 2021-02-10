@@ -1,5 +1,4 @@
 import 'package:ar_post/app/auth/auth_bloc.dart';
-import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/app/user_posts/user_posts_bloc.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/domain/post/post.dart';
