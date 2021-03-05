@@ -38,9 +38,6 @@ class _ArViewWidgetState extends State<ArViewWidget> {
           }
         } else if (state.action == ArAction.releasing) {
           _release();
-        } else if (state.action == ArAction.moving &&
-            state.direction.isSome()) {
-          _turn(state.direction.getOrElse(() => null));
         }
       },
       child: Screenshot(
@@ -147,16 +144,10 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Future _addPlane() async {
     node = ARKitReferenceNode(
       position: vector_math.Vector3.all(0),
-      url: "models.scnassets/hello_world.dae",
+      url: "models.scnassets/feile.dae",
       name: "main",
     );
 
     await arkitController.add(node, parentNodeName: lastAnchor.nodeName);
-  }
-
-  void _turn(TurnDirection direction) {
-    if (node != null) {
-      //node.rotation = vector_math.Matrix3(100, 100, 100, 000, 000, 000, 000, 000, 000);
-    }
   }
 }
