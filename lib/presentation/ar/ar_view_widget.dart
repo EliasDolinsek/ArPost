@@ -13,12 +13,13 @@ class ArViewWidget extends StatefulWidget {
 
 class _ArViewWidgetState extends State<ArViewWidget> {
   final screenshotController = ScreenshotController();
+
   ARKitController arkitController;
   ARKitPlaneAnchor lastAnchor;
   ARKitNode node;
 
   double dx = 0, dy = 0, scale = 1;
-
+  ArObject arObject = ArObject.helloWorldText;
 
   @override
   void dispose() {
@@ -38,6 +39,8 @@ class _ArViewWidgetState extends State<ArViewWidget> {
           }
         } else if (state.action == ArAction.releasing) {
           _release();
+        } else if (state.action == ArAction.idle) {
+          arObject = state.selectedObject;
         }
       },
       child: Screenshot(
@@ -144,10 +147,20 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Future _addPlane() async {
     node = ARKitReferenceNode(
       position: vector_math.Vector3.all(0),
-      url: "models.scnassets/feile.dae",
+      url: getModelUrl(),
       name: "main",
     );
 
     await arkitController.add(node, parentNodeName: lastAnchor.nodeName);
+  }
+
+  String getModelUrl() {
+    switch (arObject) {
+      case ArObject.helloWorldText:
+        return "models.scnassets/hello_world.dae";
+      case ArObject.file:
+        return "models.scnassets/file.dae";
+      default: return "";
+    }
   }
 }

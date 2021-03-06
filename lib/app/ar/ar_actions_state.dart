@@ -2,12 +2,17 @@ part of 'ar_actions_bloc.dart';
 
 @freezed
 abstract class ArActionsState with _$ArActionsState {
-  const factory ArActionsState(
-      {@required ArAction action,
-      @required Option<LocalImage> image}) = _ArActionsState;
+  const factory ArActionsState({
+    @required ArAction action,
+    @required ArObject selectedObject,
+    @required Option<LocalImage> image,
+  }) = _ArActionsState;
 
-  factory ArActionsState.initial() =>
-      ArActionsState(action: ArAction.idle, image: none());
+  factory ArActionsState.initial() => ArActionsState(
+        action: ArAction.idle,
+        selectedObject: ArObject.helloWorldText,
+        image: none(),
+      );
 }
 
 enum ArAction {
@@ -20,4 +25,9 @@ enum ArAction {
   publishing,
   published,
   releasing
+}
+
+enum ArObject {
+  helloWorldText,
+  file,
 }

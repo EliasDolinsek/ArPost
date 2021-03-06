@@ -1,6 +1,7 @@
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 import 'ar_button.dart';
 
@@ -33,15 +34,50 @@ class ArControlsWidget extends StatelessWidget {
   }
 
   Widget _buildIdle(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ArButton(
-        iconData: Icons.push_pin,
-        onPressed: () {
-          context.read<ArActionsBloc>().add(const ArActionsEvent.place());
-        },
-      ),
+    return Stack(
+      children: [
+        Center(
+          child: Swiper(
+            itemBuilder: (context, index) {
+              return Image.asset(
+                getImageByIndex(index),
+                fit: BoxFit.fitWidth,
+              );
+            },
+            viewportFraction: 0.8,
+            itemCount: 2,
+            onIndexChanged: (index) {
+              ArObject object;
+              switch (index) {
+                case 0: object = ArObject.helloWorldText; break;
+                case 1: object = ArObject.file; break;
+              }
+
+              if(object != null){
+                context.read<ArActionsBloc>().add(ArActionsEvent.setSelectedArObject(selectedObject: object));
+              }
+            },
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ArButton(
+            iconData: Icons.push_pin,
+            onPressed: () {
+              context.read<ArActionsBloc>().add(const ArActionsEvent.place());
+            },
+          ),
+        ),
+      ],
     );
+  }
+
+  String getImageByIndex(int index){
+    switch(index){
+      case 0: return "assets/hello_world.png";
+      case 1: return "assets/file.png";
+      default: return "assets/hello_world.png";
+    }
   }
 
   Widget _buildPlacedCapturedOrMoving(BuildContext context, bool moving) {

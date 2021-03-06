@@ -30,7 +30,7 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
         yield state.copyWith(action: ArAction.placing);
       },
       release: (_Release value) async* {
-        yield state.copyWith(action: ArAction.releasing);
+        yield state.copyWith(action: ArAction.releasing, selectedObject: ArObject.helloWorldText);
       },
       capture: (_Capture value) async* {
         yield state.copyWith(action: ArAction.capturing);
@@ -67,7 +67,9 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       },
       notifyDisposed: (_NotifyDisposed value) async* {
         yield ArActionsState.initial();
-      },
+      }, setSelectedArObject: (_SetSelectedArObject value) async* { 
+        yield state.copyWith(selectedObject: value.selectedObject);
+       },
     );
   }
 

@@ -8,8 +8,9 @@ abstract class ArActionsEvent with _$ArActionsEvent {
 
   const factory ArActionsEvent.capture() = _Capture;
 
-  const factory ArActionsEvent.notifyCaptured({@required LocalImage file}) =
-      _NotifyCaptured;
+  const factory ArActionsEvent.notifyCaptured({
+    @required LocalImage file,
+  }) = _NotifyCaptured;
 
   const factory ArActionsEvent.release() = _Release;
 
@@ -24,4 +25,8 @@ abstract class ArActionsEvent with _$ArActionsEvent {
   const factory ArActionsEvent.backToPlaced() = _NotifyClose;
 
   const factory ArActionsEvent.notifyDisposed() = _NotifyDisposed;
+
+  const factory ArActionsEvent.setSelectedArObject({
+    @required ArObject selectedObject,
+  }) = _SetSelectedArObject;
 }
