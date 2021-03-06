@@ -65,9 +65,6 @@ class ArActionsBloc extends Bloc<ArActionsEvent, ArActionsState> {
       move: (_Move value) async* {
         yield state.copyWith(action: ArAction.moving);
       },
-      turn: (_Turn value) async* {
-        yield state.copyWith(direction: some(value.direction));
-      },
       notifyDisposed: (_NotifyDisposed value) async* {
         yield ArActionsState.initial();
       },

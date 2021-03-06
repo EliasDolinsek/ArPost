@@ -17,9 +17,6 @@ abstract class ArActionsEvent with _$ArActionsEvent {
 
   const factory ArActionsEvent.move() = _Move;
 
-  const factory ArActionsEvent.turn({@required TurnDirection direction}) =
-      _Turn;
-
   const factory ArActionsEvent.saveImageToGallery() = _ImageSaveToGallery;
 
   const factory ArActionsEvent.shareImage({@required User user}) = _ShareImage;
@@ -28,5 +25,3 @@ abstract class ArActionsEvent with _$ArActionsEvent {
 
   const factory ArActionsEvent.notifyDisposed() = _NotifyDisposed;
 }
-
-enum TurnDirection { left, right }
