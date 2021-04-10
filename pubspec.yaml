@@ -34,6 +34,7 @@ dev_dependencies:
   freezed: ^0.12.6
   injectable_generator: ^1.0.4
   lint: ^1.3.0
+  flutter_launcher_icons: ^0.8.1
 analyzer:
   exclude:
   - '**/*.g.dart'
@@ -42,3 +43,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+flutter_icons:
+  ios: true
+  image_path: "assets/launcher_icon/launcher_icon.png"
