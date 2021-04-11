@@ -1,6 +1,7 @@
 import 'package:ar_post/app/auth/auth_bloc.dart';
 import 'package:ar_post/app/post/posts_bloc.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
+import 'package:ar_post/domain/post/post.dart';
 import 'package:ar_post/presentation/posts/post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,25 +34,7 @@ class FeedWidget extends StatelessWidget {
               onRefresh: () async {
                 context.read<PostsBloc>().add(PostsEvent.load(userId: userId));
               },
-              child: ListView.separated(
-                itemCount: value.posts.length,
-                itemBuilder: (context, index) {
-                  final post = value.posts[index];
-                  return PostWidget(
-                    post: post,
-                    onLike: () {
-                      context.read<PostsBloc>().add(
-                            PostsEvent.likePost(
-                              postId: post.id,
-                              userId: userId,
-                            ),
-                          );
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) =>
-                    const SizedBox(height: 32.0),
-              ),
+              child: _buildPostsList(value.posts, userId),
             );
           },
           postsLoadingFailure: (_) => _buildFailure(),
@@ -61,6 +44,31 @@ class FeedWidget extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _buildPostsList(List<Post> posts, UniqueId userId) {
+    if (posts.isEmpty) {
+      return const Center(child: Text("NO POSTS AVAILABLE"));
+    } else {
+      return ListView.separated(
+        itemCount: posts.length,
+        itemBuilder: (context, index) {
+          final post = posts[index];
+          return PostWidget(
+            post: post,
+            onLike: () {
+              context.read<PostsBloc>().add(
+                    PostsEvent.likePost(
+                      postId: post.id,
+                      userId: userId,
+                    ),
+                  );
+            },
+          );
+        },
+        separatorBuilder: (context, index) => const SizedBox(height: 32.0),
+      );
+    }
   }
 
   Widget _buildLoadingAndRequestPosts(BuildContext context, UniqueId userId) {

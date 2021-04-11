@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserPostsWidget extends StatelessWidget {
   const UserPostsWidget();
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -47,18 +48,22 @@ class UserPostsWidget extends StatelessWidget {
   }
 
   Widget _buildUserPostsLoaded(List<Post> posts, BuildContext context) {
-    return SpacedListWidget(
-      children: posts
-          .map((e) => PostWidget(
-                post: e,
-                onDelete: () {
-                  context
-                      .read<UserPostsBloc>()
-                      .add(UserPostsEvent.deletePost(postId: e.id));
-                },
-              ))
-          .toList(),
-    );
+    if (posts.isEmpty) {
+      return const Center(child: Text("NO POSTS AVAILABLE"));
+    } else {
+      return SpacedListWidget(
+        children: posts.map((e) {
+          return PostWidget(
+            post: e,
+            onDelete: () {
+              context
+                  .read<UserPostsBloc>()
+                  .add(UserPostsEvent.deletePost(postId: e.id));
+            },
+          );
+        }).toList(),
+      );
+    }
   }
 
   Widget _buildLoadingAndRequestPosts(BuildContext context, UniqueId userId) {
