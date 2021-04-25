@@ -37,27 +37,7 @@ class ArControlsWidget extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: Swiper(
-            itemBuilder: (context, index) {
-              return Image.asset(
-                getImageByIndex(index),
-                fit: BoxFit.fitWidth,
-              );
-            },
-            viewportFraction: 0.8,
-            itemCount: 2,
-            onIndexChanged: (index) {
-              ArObject object;
-              switch (index) {
-                case 0: object = ArObject.helloWorldText; break;
-                case 1: object = ArObject.file; break;
-              }
-
-              if(object != null){
-                context.read<ArActionsBloc>().add(ArActionsEvent.setSelectedArObject(selectedObject: object));
-              }
-            },
-          ),
+          child: _buildObjectSelectionSwiper(context),
         ),
         Align(
           alignment: Alignment.bottomCenter,
@@ -72,11 +52,38 @@ class ArControlsWidget extends StatelessWidget {
     );
   }
 
-  String getImageByIndex(int index){
-    switch(index){
-      case 0: return "assets/hello_world.png";
-      case 1: return "assets/file.png";
-      default: return "assets/hello_world.png";
+  Widget _buildObjectSelectionSwiper(BuildContext context) {
+    return Swiper(
+      itemBuilder: (context, index) {
+        return Image.asset(
+          getImageByIndex(index),
+          fit: BoxFit.fitWidth,
+        );
+      },
+      viewportFraction: 0.8,
+      itemCount: ArObject.values.length,
+      onIndexChanged: (index){
+        final object = ArObject.values[index];
+
+        if (object != null) {
+          context
+              .read<ArActionsBloc>()
+              .add(ArActionsEvent.setSelectedArObject(selectedObject: object));
+        }
+      },
+    );
+  }
+
+  String getImageByIndex(int index) {
+    switch (index) {
+      case 0:
+        return "assets/hello_world.png";
+      case 1:
+        return "assets/hello_world_gold.png";
+      case 2:
+        return "assets/file.png";
+      default:
+        return "assets/hello_world.png";
     }
   }
 

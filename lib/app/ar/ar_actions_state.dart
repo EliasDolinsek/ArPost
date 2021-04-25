@@ -29,5 +29,6 @@ enum ArAction {
 
 enum ArObject {
   helloWorldText,
+  helloWorldGoldText,
   file,
 }

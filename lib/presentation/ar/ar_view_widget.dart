@@ -1,4 +1,5 @@
 import 'package:ar_post/app/ar/ar_actions_bloc.dart';
+import 'package:ar_post/infrastructure/ar/ar_object_file_provider.dart';
 import 'package:arkit_plugin/arkit_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -147,20 +148,11 @@ class _ArViewWidgetState extends State<ArViewWidget> {
   Future _addPlane() async {
     node = ARKitReferenceNode(
       position: vector_math.Vector3.all(0),
-      url: getModelUrl(),
+      url: getFileUrlOfArObject(arObject),
       name: "main",
     );
 
     await arkitController.add(node, parentNodeName: lastAnchor.nodeName);
   }
 
-  String getModelUrl() {
-    switch (arObject) {
-      case ArObject.helloWorldText:
-        return "models.scnassets/hello_world.dae";
-      case ArObject.file:
-        return "models.scnassets/file.dae";
-      default: return "";
-    }
-  }
 }
