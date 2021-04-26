@@ -30,5 +30,6 @@ enum ArAction {
 enum ArObject {
   helloWorldText,
   helloWorldGoldText,
+  helloWorldGreenText,
   file,
 }
