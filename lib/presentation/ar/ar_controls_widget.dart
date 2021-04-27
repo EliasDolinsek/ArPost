@@ -62,7 +62,7 @@ class ArControlsWidget extends StatelessWidget {
       },
       viewportFraction: 0.8,
       itemCount: ArObject.values.length,
-      onIndexChanged: (index){
+      onIndexChanged: (index) {
         final object = ArObject.values[index];
 
         if (object != null) {
@@ -81,6 +81,8 @@ class ArControlsWidget extends StatelessWidget {
       case 1:
         return "assets/hello_world_gold.png";
       case 2:
+        return "assets/hello_world_green.png";
+      case 3:
         return "assets/file.png";
       default:
         return "assets/hello_world.png";
