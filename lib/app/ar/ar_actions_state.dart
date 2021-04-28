@@ -31,5 +31,6 @@ enum ArObject {
   helloWorldText,
   helloWorldGoldText,
   helloWorldGreenText,
+  helloWorldOrangeText,
   file,
 }

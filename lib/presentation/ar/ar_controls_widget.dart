@@ -83,6 +83,8 @@ class ArControlsWidget extends StatelessWidget {
       case 2:
         return "assets/hello_world_green.png";
       case 3:
+        return "assets/hello_world_orange.png";
+      case 4:
         return "assets/file.png";
       default:
         return "assets/hello_world.png";
