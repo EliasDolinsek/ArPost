@@ -6,7 +6,8 @@ part 'comment.freezed.dart';
 @freezed
 abstract class Comment with _$Comment {
   const factory Comment({
-    UniqueId id,
+    UniqueId commentId,
+    UniqueId postId,
     String userEmail,
     NonEmptyText comment,
     DateTime publishDate
