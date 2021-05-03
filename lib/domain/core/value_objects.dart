@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ar_post/domain/core/errors.dart';
+import 'package:ar_post/domain/core/value_validators.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -60,4 +61,16 @@ class LocalImage extends ValueObject<File> {
   }
 
   const LocalImage._(this.value);
+}
+
+class NonEmptyText extends ValueObject<String> {
+  @override
+  final Either<ValueFailure<String>, String> value;
+
+  factory NonEmptyText(String text){
+    return NonEmptyText._(validateNonEmptyText(text));
+  }
+
+  const NonEmptyText._(this.value);
+
 }

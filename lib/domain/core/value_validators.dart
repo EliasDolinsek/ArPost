@@ -20,3 +20,11 @@ Either<ValueFailure<String>, String> validatePassword(String value) {
     return Right(value);
   }
 }
+
+Either<ValueFailure<String>, String> validateNonEmptyText(String text) {
+  if(text == null || text.trim().isEmpty){
+    return left(ValueFailure.emptyText(text: text));
+  } else {
+    return right(text);
+  }
+}
