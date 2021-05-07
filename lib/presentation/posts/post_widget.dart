@@ -1,5 +1,7 @@
 import 'package:ar_post/domain/post/post.dart';
 import 'package:ar_post/presentation/core/content_widget.dart';
+import 'package:ar_post/presentation/posts/post_details_page.dart';
+import 'package:ar_post/presentation/posts/post_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,44 +18,45 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ContentWidget(
-      child: Column(
-        children: [
-          Container(
-            height: 500,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(post.imageUrl),
-                fit: BoxFit.fitWidth,
-              ),
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => PostDetailsPage(
+            post: post,
           ),
-          const SizedBox(height: 4.0),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Text(
-                  post.userEmail,
-                  style: GoogleFonts.openSans(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-                Expanded(child: Container()),
-                if (onLike != null) _buildLikesWidget(context),
-                if (onDelete != null)
-                  IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
+        ));
+      },
+      child: ContentWidget(
+        child: Column(
+          children: [
+            PostImage(imageUrl: post.imageUrl),
+            const SizedBox(height: 4.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                children: [
+                  Text(
+                    post.userEmail,
+                    style: GoogleFonts.openSans(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
                     ),
-                    onPressed: () => onDelete(),
-                  )
-              ],
-            ),
-          )
-        ],
+                  ),
+                  Expanded(child: Container()),
+                  if (onLike != null) _buildLikesWidget(context),
+                  if (onDelete != null)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => onDelete(),
+                    )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
