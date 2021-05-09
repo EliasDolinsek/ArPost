@@ -34,7 +34,7 @@ class FirebaseCommentFacade implements ICommentFacade {
     final snapshot = await _firebaseFirestore
         .collection("comments")
         .where("postId", isEqualTo: postId.getOrCrash())
-        .orderBy("publishDate")
+        .orderBy("publishDate", descending: true)
         .get();
 
     final result = snapshot.docs.map((e) {
@@ -46,10 +46,11 @@ class FirebaseCommentFacade implements ICommentFacade {
 
   Comment _commentFromData(String commentId, Map<String, dynamic> data) {
     return Comment(
-        userEmail: data["userEmail"] as String,
-        comment: NonEmptyText(data["text"] as String),
-        commentId: UniqueId.fromUniqueString(commentId),
-        postId: UniqueId.fromUniqueString("postId"),
-        publishDate: data["publishDate"] as DateTime);
+      userEmail: data["userEmail"] as String,
+      comment: NonEmptyText(data["text"] as String),
+      commentId: UniqueId.fromUniqueString(commentId),
+      postId: UniqueId.fromUniqueString("postId"),
+      publishDate: data["publishDate"].toDate() as DateTime,
+    );
   }
 }
