@@ -14,17 +14,30 @@ class CommentsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          getIt<CommentsBloc>()..add(CommentsEvent.load(postId)),
-      child: BlocBuilder<CommentsBloc, CommentsState>(
-        builder: (context, state) {
-          if (state.isLoading) return _buildLoading();
-          return state.commentsOption.fold(
-            () => _buildNoCommentsAvailable(),
-            (a) => _buildCommentsAvailable(a),
-          );
-        },
+      getIt<CommentsBloc>()
+        ..add(CommentsEvent.load(postId)),
+      child: Column(
+        children: [
+          _buildCommentTextField(),
+          _buildCommentsList(),
+        ],
       ),
     );
+  }
+
+  Widget _buildCommentsList() {
+    return BlocBuilder<CommentsBloc, CommentsState>(
+      builder: (context, state) {
+        if (state.isLoading) return _buildLoading();
+        return state.commentsOption.fold(
+              () => _buildNoCommentsAvailable(),
+              (a) => _buildCommentsAvailable(a),
+        );
+      },
+    );
+  }
+
+  Widget _buildCommentTextField() {
   }
 
   Widget _buildNoCommentsAvailable() {

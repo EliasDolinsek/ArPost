@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ar_post/domain/auth/user.dart';
 import 'package:ar_post/domain/comments/comment.dart';
 import 'package:ar_post/domain/comments/i_comment_facade.dart';
 import 'package:ar_post/domain/core/value_objects.dart';
@@ -32,6 +33,18 @@ class CommentsBloc extends Bloc<CommentsEvent, CommentsState> {
         yield result.fold((l) => state.copyWith(isLoading: false), (r) {
           return state.copyWith(isLoading: false, commentsOption: some(r));
         });
+      },
+      commentInputChanged: (CommentInputChanged value) async* {
+        yield state.copyWith(commentInput: NonEmptyText(value.input));
+      },
+      submit: (Submit value) async* {
+        yield state.copyWith(isLoading: true);
+        await _commentFacade.publishComment(
+          value.postId,
+          value.user,
+          state.commentInput,
+        );
+        add(CommentsEvent.load(value.postId));
       },
     );
   }
