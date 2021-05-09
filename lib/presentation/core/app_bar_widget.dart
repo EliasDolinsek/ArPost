@@ -37,7 +37,10 @@ class AppBarWidget extends StatelessWidget {
           child: Text(
             title,
             style: GoogleFonts.openSans(
-                color: Colors.black, fontWeight: FontWeight.w600, fontSize: 28),
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 28,
+            ),
           ),
         ),
         centerTitle: false,
@@ -52,7 +55,8 @@ class AppBarListWidget extends StatelessWidget {
   final String title;
   final List<Widget> children;
 
-  const AppBarListWidget({Key key, @required this.title, this.children = const []})
+  const AppBarListWidget(
+      {Key key, @required this.title, this.children = const []})
       : super(key: key);
 
   @override

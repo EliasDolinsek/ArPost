@@ -13,6 +13,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'app/ar/ar_actions_bloc.dart';
 import 'app/auth/auth_bloc.dart';
+import 'app/comments/comments_bloc.dart';
 import 'infrastructure/auth/firebase_auth_facade.dart';
 import 'infrastructure/comments/firebase_comment_facade.dart';
 import 'infrastructure/core/firebase_injectable_module.dart';
@@ -48,6 +49,7 @@ GetIt $initGetIt(
   gh.factory<SignInFormBloc>(() => SignInFormBloc(get<IAuthFacade>()));
   gh.lazySingleton<UploadFileManager>(
       () => FirestoreUploadFileManager(get<FirebaseStorage>()));
+  gh.factory<CommentsBloc>(() => CommentsBloc(get<ICommentFacade>()));
   gh.lazySingleton<IPostFacade>(() => PostFacadeDefaultImpl(
       get<FirebaseFirestore>(), get<UploadFileManager>()));
   gh.factory<UserPostsBloc>(() => UserPostsBloc(get<IPostFacade>()));
