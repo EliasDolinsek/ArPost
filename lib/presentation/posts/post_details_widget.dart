@@ -17,7 +17,7 @@ class PostDetailsWidget extends StatelessWidget {
     @required this.post,
     @required this.userId,
     @required this.likeEnabled,
-    @required this.onDelete,
+    this.onDelete,
   }) : super(key: key);
 
   @override
@@ -35,6 +35,7 @@ class PostDetailsWidget extends StatelessWidget {
 
   Widget _buildContent(BuildContext context, LikePostState state) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           post.userEmail,
@@ -43,7 +44,15 @@ class PostDetailsWidget extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        Expanded(child: Container()),
+        _buildActions(),
+      ],
+    );
+  }
+
+  Widget _buildActions() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
         if (likeEnabled)
           BlocBuilder<LikePostBloc, LikePostState>(
             builder: (context, state) {
