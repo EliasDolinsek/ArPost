@@ -11,19 +11,21 @@ class PostDetailsWidget extends StatelessWidget {
   final UniqueId userId;
   final bool likeEnabled;
   final VoidCallback onDelete;
+  final LikePostBloc likePostBloc;
 
   const PostDetailsWidget({
     Key key,
     @required this.post,
     @required this.userId,
     @required this.likeEnabled,
+    this.likePostBloc,
     this.onDelete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => getIt<LikePostBloc>()
+      create: (context) => (likePostBloc ?? getIt<LikePostBloc>())
         ..add(LikePostEvent.loadLiked(postId: post.id, userId: userId)),
       child: BlocBuilder<LikePostBloc, LikePostState>(
         builder: (context, state) {
@@ -44,21 +46,16 @@ class PostDetailsWidget extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-        _buildActions(),
+        _buildActions(context, state),
       ],
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(BuildContext context, LikePostState state) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (likeEnabled)
-          BlocBuilder<LikePostBloc, LikePostState>(
-            builder: (context, state) {
-              return _buildLikesWidget(context, state);
-            },
-          ),
+        if (likeEnabled) _buildLikesWidget(context, state),
         if (onDelete != null)
           IconButton(
             icon: const Icon(
@@ -93,9 +90,10 @@ class PostDetailsWidget extends StatelessWidget {
         _getLikeIcon(context, state),
         color: Theme.of(context).primaryColor,
       ),
-      onPressed: () => context
-          .read<LikePostBloc>()
-          .add(LikePostEvent.likeToggled(postId: post.id, userId: userId)),
+      onPressed: () {
+        final bloc = context.read<LikePostBloc>();
+        bloc.add(LikePostEvent.likeToggled(postId: post.id, userId: userId));
+      },
     );
   }
 

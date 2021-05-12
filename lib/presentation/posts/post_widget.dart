@@ -7,7 +7,6 @@ import 'package:ar_post/presentation/posts/post_details_page.dart';
 import 'package:ar_post/presentation/posts/post_details_widget.dart';
 import 'package:ar_post/presentation/posts/post_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PostWidget extends StatelessWidget {
   final UniqueId userId;
@@ -25,23 +24,24 @@ class PostWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final likePostBloc = getIt<LikePostBloc>();
     return GestureDetector(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => PostDetailsPage(
-            post: post,
-          ),
-        ));
-      },
-      child: BlocProvider(
-        create: (context) => getIt<LikePostBloc>()
-          ..add(LikePostEvent.loadLiked(postId: post.id, userId: userId)),
-        child: _buildContent(context),
-      ),
+      onTap: () => onPostTapped(context, likePostBloc),
+      child: _buildContent(context, likePostBloc),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Future onPostTapped(BuildContext context, LikePostBloc likePostBloc) async {
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PostDetailsPage(
+        post: post,
+      ),
+    ));
+
+    likePostBloc.add(LikePostEvent.loadLiked(postId: post.id, userId: userId));
+  }
+
+  Widget _buildContent(BuildContext context, LikePostBloc likePostBloc) {
     return ContentWidget(
       child: Column(
         children: [
@@ -57,6 +57,7 @@ class PostWidget extends StatelessWidget {
               userId: userId,
               likeEnabled: likeEnabled,
               onDelete: onDelete,
+              likePostBloc: likePostBloc,
             ),
           ),
         ],

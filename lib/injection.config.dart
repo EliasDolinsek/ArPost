@@ -53,11 +53,11 @@ GetIt $initGetIt(
   gh.factory<CommentsBloc>(() => CommentsBloc(get<ICommentFacade>()));
   gh.lazySingleton<IPostFacade>(() => PostFacadeDefaultImpl(
       get<FirebaseFirestore>(), get<UploadFileManager>()));
+  gh.factory<LikePostBloc>(() => LikePostBloc(get<IPostFacade>()));
   gh.factory<UserPostsBloc>(() => UserPostsBloc(get<IPostFacade>()));
 
   // Eager singletons must be registered in the right order
   gh.singleton<AuthBloc>(AuthBloc(get<IAuthFacade>()));
-  gh.singleton<LikePostBloc>(LikePostBloc(get<IPostFacade>()));
   gh.singleton<PostsBloc>(PostsBloc(get<IPostFacade>()));
   gh.singleton<ArActionsBloc>(ArActionsBloc(get<IPostFacade>()));
   return get;

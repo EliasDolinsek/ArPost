@@ -14,7 +14,7 @@ part 'like_post_state.dart';
 
 part 'like_post_bloc.freezed.dart';
 
-@singleton
+@injectable
 class LikePostBloc extends Bloc<LikePostEvent, LikePostState> {
   final IPostFacade _postFacade;
 
