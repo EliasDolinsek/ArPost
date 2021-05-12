@@ -1,13 +1,14 @@
 import 'package:ar_post/app/auth/auth_bloc.dart';
 import 'package:ar_post/domain/auth/user.dart';
+import 'package:ar_post/domain/core/value_objects.dart';
 import 'package:ar_post/domain/post/post.dart';
 import 'package:ar_post/injection.dart';
 import 'package:ar_post/presentation/comments/comments_widget.dart';
 import 'package:ar_post/presentation/core/app_bar_widget.dart';
+import 'package:ar_post/presentation/posts/post_details_widget.dart';
 import 'package:ar_post/presentation/posts/post_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class PostDetailsPage extends StatelessWidget {
   final Post post;
@@ -46,7 +47,7 @@ class PostDetailsPage extends StatelessWidget {
                 elevation: 3,
                 child: PostImage(imageUrl: post.imageUrl),
               ),
-              _buildPostDetails(),
+              _buildPostDetails(user.id),
             ],
           ),
           CommentsWidget(
@@ -58,7 +59,7 @@ class PostDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPostDetails() {
+  Widget _buildPostDetails(UniqueId userId) {
     return SizedBox(
       width: double.infinity,
       height: 500,
@@ -73,17 +74,14 @@ class PostDetailsPage extends StatelessWidget {
           child: Card(
             elevation: 5,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Text(
-                    post.userEmail,
-                    style: GoogleFonts.openSans(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: PostDetailsWidget(
+                post: post,
+                userId: userId,
+                likeEnabled: true,
               ),
             ),
           ),
