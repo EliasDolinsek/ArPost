@@ -39,6 +39,7 @@ class PostDetailsPage extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(
         children: [
+          const SizedBox(height: 16.0),
           Stack(
             children: [
               Material(

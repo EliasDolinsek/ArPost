@@ -99,4 +99,13 @@ class PostFacadeDefaultImpl extends IPostFacade {
     ImageGallerySaver.saveFile(image.getOrCrash().path);
     return right(unit);
   }
+
+  @override
+  Future<Either<PostFailure, Post>> getPost(UniqueId postId, UniqueId userId) async {
+    try {
+      return right(await _getPostById(postId, userId));
+    } on Exception {
+      return left(const PostFailure.serverError());
+    }
+  }
 }

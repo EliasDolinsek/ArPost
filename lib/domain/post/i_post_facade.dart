@@ -16,4 +16,6 @@ abstract class IPostFacade {
   Future<Either<PostFailure, Unit>> deletePost(UniqueId postId);
 
   Future<Either<PostFailure, Post>> likePost(UniqueId postId, UniqueId userId);
+
+  Future<Either<PostFailure, Post>> getPost(UniqueId postId, UniqueId userId);
 }
