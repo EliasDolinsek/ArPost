@@ -40,14 +40,18 @@ class UserPostsWidget extends StatelessWidget {
           failure: (_) => _buildError(),
           initial: (_) => _buildLoadingAndRequestPosts(context, userId),
           loaded: (LoadedUserPostsState value) =>
-              _buildUserPostsLoaded(value.posts, context),
+              _buildUserPostsLoaded(value.posts, userId, context),
           loading: (_) => _buildLoading(),
         );
       },
     );
   }
 
-  Widget _buildUserPostsLoaded(List<Post> posts, BuildContext context) {
+  Widget _buildUserPostsLoaded(
+    List<Post> posts,
+    UniqueId userId,
+    BuildContext context,
+  ) {
     if (posts.isEmpty) {
       return const Center(child: Text("NO POSTS AVAILABLE"));
     } else {
@@ -55,6 +59,8 @@ class UserPostsWidget extends StatelessWidget {
         children: posts.map((e) {
           return PostWidget(
             post: e,
+            userId: userId,
+            likeEnabled: false,
             onDelete: () {
               context
                   .read<UserPostsBloc>()

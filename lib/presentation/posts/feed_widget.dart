@@ -56,14 +56,8 @@ class FeedWidget extends StatelessWidget {
           final post = posts[index];
           return PostWidget(
             post: post,
-            onLike: () {
-              context.read<PostsBloc>().add(
-                    PostsEvent.likePost(
-                      postId: post.id,
-                      userId: userId,
-                    ),
-                  );
-            },
+            userId: userId,
+            likeEnabled: true,
           );
         },
         separatorBuilder: (context, index) => const SizedBox(height: 32.0),
